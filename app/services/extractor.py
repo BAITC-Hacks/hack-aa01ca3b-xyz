@@ -188,7 +188,13 @@ def _ollama_url() -> str:
         is_loopback = ipaddress.ip_address(host).is_loopback
     except ValueError:
         is_loopback = host.lower() == "localhost"
-    if parsed.scheme != "http" or not is_loopback:
+    docker_ollama = (
+        os.getenv("ALLOW_DOCKER_OLLAMA") == "1"
+        and host.lower() == "ollama"
+        and parsed.port == 11434
+        and parsed.username is None
+    )
+    if parsed.scheme != "http" or not (is_loopback or docker_ollama):
         raise ValueError("OLLAMA_URL должен указывать на локальный адрес, например http://127.0.0.1:11434")
     return base
 
