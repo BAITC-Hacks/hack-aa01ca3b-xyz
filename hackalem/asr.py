@@ -27,7 +27,15 @@ SAMPLE_RATE = 16_000
 BASE_MODEL = os.getenv("ASR_BASE_MODEL", "openai/whisper-large-v3-turbo")
 KZ_BASE_MODEL = os.getenv("ASR_KZ_BASE_MODEL", "abilmansplus/whisper-turbo-ksc2")
 KZ_ADAPTER = os.getenv("ASR_KZ_ADAPTER", "abilmansplus/whisper-turbo-kaz-rus-v1")
-ROUTING = os.getenv("ASR_ROUTING", "auto")  # auto: ru → base model, kk/mix → kaz-rus; kz-only: everything → kaz-rus
+def _total_ram_gb() -> float:
+    try:
+        return os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES") / 1024**3
+    except (AttributeError, ValueError, OSError):
+        return 16.0
+
+
+# auto: ru → base model, kk/mix → kaz-rus; kz-only: everything → kaz-rus (one model in memory, for < 12 GB RAM)
+ROUTING = os.getenv("ASR_ROUTING") or ("auto" if _total_ram_gb() >= 12 else "kz-only")
 MAX_CHUNK_S = 20.0
 MIN_CHUNK_S = 0.35
 
