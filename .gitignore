@@ -7,3 +7,4 @@ models/
 out/
 node_modules/
 frontend/dist/
+data/registry/

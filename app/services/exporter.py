@@ -174,3 +174,21 @@ def _stamp(seconds: float) -> str:
 
 def _html(value: Any) -> str:
     return escape(str(value or "")).replace("\n", "<br/>")
+
+
+def build_transcript_pdf(title: str, meeting_date: str, transcript: list[dict[str, Any]]) -> bytes:
+    """Transcript-only PDF (e.g. right after live transcription)."""
+    buffer = io.BytesIO()
+    font_name, bold_name = _register_unicode_font()
+    base_styles = getSampleStyleSheet()
+    body = ParagraphStyle("TranscriptBody", parent=base_styles["BodyText"], fontName=font_name, fontSize=10, leading=14, alignment=TA_LEFT, spaceAfter=5)
+    title_style = ParagraphStyle("TranscriptTitle", parent=base_styles["Title"], fontName=bold_name, fontSize=18, leading=22)
+    story: list[Any] = [Paragraph(escape(title or "Стенограмма совещания"), title_style), Spacer(1, 3 * mm)]
+    story.append(Paragraph(f"Дата: {escape(meeting_date or 'не указана')} · Сформировано Briefly AI локально", body))
+    story.append(Spacer(1, 3 * mm))
+    for segment in transcript:
+        speaker = escape(str(segment.get("speaker", "")))
+        prefix = f"<b>[{_stamp(segment.get('start', 0))}] {speaker}:</b> " if speaker else f"<b>[{_stamp(segment.get('start', 0))}]</b> "
+        story.append(Paragraph(prefix + _html(segment.get("text", "")), body))
+    SimpleDocTemplate(buffer, pagesize=A4, rightMargin=16 * mm, leftMargin=16 * mm, topMargin=15 * mm, bottomMargin=15 * mm, title=title or "Стенограмма").build(story)
+    return buffer.getvalue()

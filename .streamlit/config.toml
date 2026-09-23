@@ -4,6 +4,8 @@ gatherUsageStats = false
 [server]
 address = "127.0.0.1"
 maxUploadSize = 1024
+# The source watcher walks every loaded module and trips over transformers lazy imports
+fileWatcherType = "none"
 
 [theme]
 base = "light"
