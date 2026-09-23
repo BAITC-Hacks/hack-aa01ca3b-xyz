@@ -200,6 +200,20 @@ def _ollama_url() -> str:
 
 
 def _ollama_json(prompt: str, schema: dict[str, Any]) -> dict[str, Any]:
+    """Call the local LLM with a JSON schema; retry once with a larger context if the JSON comes back cut."""
+    try:
+        return _ollama_json_once(prompt, schema, _context_size(prompt))
+    except json.JSONDecodeError:
+        return _ollama_json_once(prompt, schema, 16384)
+
+
+def _context_size(prompt: str) -> int:
+    """Enough context for the prompt (≈2.5 characters per token for Cyrillic) plus the answer."""
+    needed = int(len(prompt) / 2.5) + 3072
+    return max(int(os.getenv("OLLAMA_NUM_CTX", "8192")), min(16384, ((needed + 1023) // 1024) * 1024))
+
+
+def _ollama_json_once(prompt: str, schema: dict[str, Any], num_ctx: int) -> dict[str, Any]:
     payload = {
         "model": OLLAMA_MODEL,
         "messages": [{"role": "user", "content": prompt}],
@@ -207,7 +221,7 @@ def _ollama_json(prompt: str, schema: dict[str, Any]) -> dict[str, Any]:
         "stream": False,
         "think": False,
         "keep_alive": os.getenv("OLLAMA_KEEP_ALIVE", "60s"),
-        "options": {"temperature": 0, "num_ctx": int(os.getenv("OLLAMA_NUM_CTX", "8192"))},
+        "options": {"temperature": 0, "num_ctx": num_ctx, "num_predict": 3072},
     }
     request = urllib.request.Request(
         f"{_ollama_url()}/api/chat",
@@ -446,7 +460,11 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str, progr
         return result
 
     raw_transcript = _transcript_text(segments)
-    overview = step("определяю участников и итоги", 0.1, lambda: _ollama_json(_overview_prompt(raw_transcript, meeting_date), OVERVIEW_SCHEMA))
+    try:
+        overview = step("определяю участников и итоги", 0.1, lambda: _ollama_json(_overview_prompt(raw_transcript, meeting_date), OVERVIEW_SCHEMA))
+    except (ValueError, json.JSONDecodeError) as exc:  # keep going: names come from addresses, summary from the text
+        trace.append({"step": "определяю участников и итоги", "seconds": 0, "result": f"ошибка модели, упрощённый режим ({exc})"})
+        overview = {"participants": [], "summary": _heuristic_analysis(segments)["summary"], "summary_items": []}
     address_names = _names_from_addresses(segments)
     participants_raw = [item for item in overview.get("participants", []) if isinstance(item, dict)]
     known = {str(item.get("speaker", "")) for item in participants_raw}
@@ -473,12 +491,19 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str, progr
     }
     trace[-1]["result"] = f"участников с именем: {len(names)}"
     named_transcript = _transcript_text(segments, names)
-    drafted = step("извлекаю поручения", 0.4, lambda: _ollama_json(_actions_prompt(named_transcript, meeting_date), ACTIONS_SCHEMA))
+    try:
+        drafted = step("извлекаю поручения", 0.4, lambda: _ollama_json(_actions_prompt(named_transcript, meeting_date), ACTIONS_SCHEMA))
+    except (ValueError, json.JSONDecodeError):
+        raise  # without draft assignments the whole analysis falls back to the transparent keyword mode
     actions = drafted.get("actions", [])
     flags = [str(flag) for flag in drafted.get("flags", [])]
     trace[-1]["result"] = f"черновик: {len(actions)} поручений"
     if os.getenv("AGENT_VERIFY", "1") == "1":
-        verified = step("проверяю поручения по транскрипту", 0.7, lambda: _ollama_json(_verify_prompt(named_transcript, meeting_date, actions), ACTIONS_SCHEMA))
+        try:
+            verified = step("проверяю поручения по транскрипту", 0.7, lambda: _ollama_json(_verify_prompt(named_transcript, meeting_date, actions), ACTIONS_SCHEMA))
+        except (ValueError, json.JSONDecodeError) as exc:  # a failed self-check keeps the draft
+            trace.append({"step": "проверяю поручения по транскрипту", "seconds": 0, "result": f"пропущено ({exc})"})
+            verified = {}
         if verified.get("actions"):
             actions = verified["actions"]
             flags = [str(flag) for flag in verified.get("flags", [])] or flags

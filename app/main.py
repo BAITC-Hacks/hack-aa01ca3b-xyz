@@ -36,7 +36,11 @@ THEMES = {
 }
 
 st.session_state.setdefault("lang", "ru")
-st.session_state.setdefault("theme", "light")
+if "theme" not in st.session_state:  # the theme option is global: show the one currently applied
+    try:
+        st.session_state["theme"] = "dark" if st._config.get_option("theme.base") == "dark" else "light"
+    except Exception:  # noqa: BLE001
+        st.session_state["theme"] = "light"
 
 
 def t(key: str, **kwargs: object) -> str:
@@ -440,7 +444,7 @@ def page_registry() -> None:
                 f"<div class='task-meta'>👤 {task.get('assignee', '')} · 📅 {deadline} · 🗂 {t('meeting')}: {task.get('meeting', '')} ({task.get('meeting_date', '')})</div>",
                 unsafe_allow_html=True,
             )
-            new_status = status_col.selectbox(t("status"), registry.STATUSES, index=registry.STATUSES.index(status), format_func=lambda item: t("status_" + item), key=f"status_{task['id']}")
+            new_status = status_col.selectbox(t("status"), registry.STATUSES, index=registry.STATUSES.index(status), format_func=lambda item: t("status_" + item), key=f"status_{task['id']}_{st.session_state['lang']}")
             if new_status != status:
                 registry.set_status(task["id"], new_status)
                 st.rerun()
