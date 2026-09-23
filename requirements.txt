@@ -1,4 +1,4 @@
-streamlit>=1.40,<2
+streamlit>=1.50,<2
 faster-whisper>=1.1,<2
 huggingface_hub>=0.27
 torch>=2.5

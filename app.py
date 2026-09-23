@@ -97,7 +97,7 @@ with right:
     expected_speakers = st.number_input("Ожидаемое число участников (подсказка)", min_value=0, max_value=30, value=0, help="0 — определить автоматически")
 
 consent = st.checkbox("Участники уведомлены о записи и расшифровке с помощью ИИ; при демонстрации реальные данные обезличены.")
-start_processing = st.button("Создать протокол", type="primary", disabled=not (upload and consent), use_container_width=False)
+start_processing = st.button("Создать протокол", type="primary", disabled=not (upload and consent), width="content")
 
 if start_processing and upload:
     progress = st.status("Обработка идёт на этом компьютере…", expanded=True)
@@ -131,7 +131,7 @@ if result:
         st.dataframe(
             pd.DataFrame(result["summary_items"]).rename(columns={"topic": "Направление / доклад", "indicator": "Показатель", "problem": "Проблема"}),
             hide_index=True,
-            use_container_width=True,
+            width="stretch",
         )
 
     speaker_names = st.session_state.setdefault("speaker_names", {})
@@ -152,7 +152,7 @@ if result:
         action_frame,
         hide_index=True,
         num_rows="dynamic",
-        use_container_width=True,
+        width="stretch",
         column_config={
             "task": st.column_config.TextColumn("Поручение", width="large"),
             "assignee": st.column_config.TextColumn("Ответственный"),
@@ -238,7 +238,7 @@ if result:
         for item in result["transcript"]
     ]
     with st.expander(f"Полный транскрипт ({len(transcript_view)} реплик)"):
-        st.dataframe(pd.DataFrame(transcript_view), hide_index=True, use_container_width=True)
+        st.dataframe(pd.DataFrame(transcript_view), hide_index=True, width="stretch")
 
     if result.get("agent_trace"):
         with st.expander("🤖 Как работал ИИ-агент"):
@@ -246,7 +246,7 @@ if result:
             st.dataframe(
                 pd.DataFrame(result["agent_trace"]).rename(columns={"step": "Шаг", "seconds": "Секунд", "result": "Результат"}),
                 hide_index=True,
-                use_container_width=True,
+                width="stretch",
             )
 
     st.subheader("Экспорт протокола")
@@ -261,7 +261,7 @@ if result:
     pdf_bytes = build_pdf(result["title"], result["date"], result["summary"], current_actions, final_transcript, participants=participants, summary_items=result.get("summary_items"))
     safe_name = "".join(character if character.isalnum() or character in "-_" else "_" for character in result["title"]).strip("_") or "meeting"
     docx_col, pdf_col = st.columns(2)
-    docx_col.download_button("Скачать DOCX", data=docx_bytes, file_name=f"{safe_name}.docx", mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document", use_container_width=True)
-    pdf_col.download_button("Скачать PDF", data=pdf_bytes, file_name=f"{safe_name}.pdf", mime="application/pdf", use_container_width=True)
+    docx_col.download_button("Скачать DOCX", data=docx_bytes, file_name=f"{safe_name}.docx", mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document", width="stretch")
+    pdf_col.download_button("Скачать PDF", data=pdf_bytes, file_name=f"{safe_name}.pdf", mime="application/pdf", width="stretch")
 
 st.caption("Протокол и извлечённые поручения нужно проверить перед рассылкой. Интеграции с Teams, Zoom, Google Meet и СЭД — следующий этап развития.")

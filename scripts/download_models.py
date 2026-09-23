@@ -5,8 +5,8 @@ No accounts or tokens are needed for the default pipeline:
   with the abilmansplus/whisper-turbo-kaz-rus-v1 LoRA adapter (Hugging Face, public);
 * speaker diarization: sherpa-onnx pyannote-segmentation-3.0 + 3D-Speaker embeddings
   (GitHub releases of k2-fsa/sherpa-onnx);
-* fallback recognizer: faster-whisper `small`.
-Optional: pyannote Community-1 diarization, only when HF_TOKEN is set.
+Optional: faster-whisper `small` fallback recognizer (DOWNLOAD_FALLBACK=1) and
+pyannote Community-1 diarization (only when HF_TOKEN is set).
 """
 
 from __future__ import annotations
@@ -61,6 +61,8 @@ def download_whisper() -> None:
 
 
 def download_fallback() -> None:
+    if os.getenv("DOWNLOAD_FALLBACK") != "1":
+        return
     from faster_whisper import WhisperModel
 
     model = os.getenv("WHISPER_MODEL", "small")
