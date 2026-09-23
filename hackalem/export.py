@@ -20,24 +20,45 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 
-def build_docx(title: str, meeting_date: str, summary: str, actions: list[dict[str, Any]], transcript: list[dict[str, Any]]) -> bytes:
+def build_docx(
+    title: str,
+    meeting_date: str,
+    summary: str,
+    actions: list[dict[str, Any]],
+    transcript: list[dict[str, Any]],
+    participants: list[dict[str, Any]] | None = None,
+    summary_items: list[dict[str, Any]] | None = None,
+) -> bytes:
     document = Document()
     section = document.sections[0]
     section.top_margin = Inches(0.65)
     section.bottom_margin = Inches(0.65)
     document.add_heading(title or "Протокол совещания", 0)
     document.add_paragraph(f"Дата совещания: {meeting_date or 'не указана'}")
+    document.add_paragraph("Участники уведомлены о ведении записи и её расшифровке с помощью ИИ. Обработка выполнена локально.")
+    if participants:
+        document.add_heading("Участники", level=1)
+        for person in participants:
+            document.add_paragraph(f"{person.get('speaker', '')}: {person.get('name', '')}", style="List Bullet")
     document.add_heading("Краткое саммари", level=1)
     document.add_paragraph(summary or "Саммари не сформировано.")
+    if summary_items:
+        table = document.add_table(rows=1, cols=3)
+        table.style = "Light Shading Accent 1"
+        for cell, heading in zip(table.rows[0].cells, ["Направление / доклад", "Показатель", "Проблема"]):
+            cell.text = heading
+        for item in summary_items:
+            for cell, key in zip(table.add_row().cells, ("topic", "indicator", "problem")):
+                cell.text = str(item.get(key) or "")
     document.add_heading(f"Поручения ({len(actions)})", level=1)
-    table = document.add_table(rows=1, cols=5)
+    table = document.add_table(rows=1, cols=6)
     table.style = "Light Shading Accent 1"
-    for cell, heading in zip(table.rows[0].cells, ["Поручение", "Ответственный", "Спикер", "Срок", "Статус"]):
+    for cell, heading in zip(table.rows[0].cells, ACTION_HEADINGS):
         cell.text = heading
     for action in actions:
         cells = table.add_row().cells
-        for cell, value in zip(cells, [action.get("task"), action.get("assignee"), action.get("speaker"), action.get("deadline"), action.get("status")]):
-            cell.text = str(value or "")
+        for cell, value in zip(cells, _action_row(action)):
+            cell.text = value
     document.add_heading("Транскрипт", level=1)
     for segment in transcript:
         start = _stamp(segment.get("start", 0))
@@ -52,7 +73,15 @@ def build_docx(title: str, meeting_date: str, summary: str, actions: list[dict[s
     return buffer.getvalue()
 
 
-def build_pdf(title: str, meeting_date: str, summary: str, actions: list[dict[str, Any]], transcript: list[dict[str, Any]]) -> bytes:
+def build_pdf(
+    title: str,
+    meeting_date: str,
+    summary: str,
+    actions: list[dict[str, Any]],
+    transcript: list[dict[str, Any]],
+    participants: list[dict[str, Any]] | None = None,
+    summary_items: list[dict[str, Any]] | None = None,
+) -> bytes:
     buffer = io.BytesIO()
     font_name, bold_name = _register_unicode_font()
     base_styles = getSampleStyleSheet()
@@ -61,13 +90,28 @@ def build_pdf(title: str, meeting_date: str, summary: str, actions: list[dict[st
     title_style = ParagraphStyle("MeetingTitle", parent=base_styles["Title"], fontName=bold_name, fontSize=20, leading=24)
     story: list[Any] = [Paragraph(escape(title or "Протокол совещания"), title_style), Spacer(1, 4 * mm)]
     story.append(Paragraph(f"Дата совещания: {escape(meeting_date or 'не указана')}", body))
+    story.append(Paragraph("Участники уведомлены о ведении записи и её расшифровке с помощью ИИ. Обработка выполнена локально.", body))
+    if participants:
+        story.append(Paragraph("Участники", heading))
+        for person in participants:
+            story.append(Paragraph(_html(f"{person.get('speaker', '')}: {person.get('name', '')}"), body))
     story.extend([Paragraph("Краткое саммари", heading), Paragraph(_html(summary or "Саммари не сформировано."), body)])
+    if summary_items:
+        summary_rows: list[list[Any]] = [[Paragraph(f"<b>{escape(label)}</b>", body) for label in ("Направление / доклад", "Показатель", "Проблема")]]
+        for item in summary_items:
+            summary_rows.append([Paragraph(_html(str(item.get(key) or "")), body) for key in ("topic", "indicator", "problem")])
+        summary_table = Table(summary_rows, colWidths=[60 * mm, 50 * mm, 68 * mm], repeatRows=1, hAlign="LEFT")
+        summary_table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e8eef7")),
+            ("GRID", (0, 0), (-1, -1), 0.35, colors.HexColor("#c5cfdd")),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ]))
+        story.append(summary_table)
     story.append(Paragraph(f"Поручения ({len(actions)})", heading))
-    rows: list[list[Any]] = [[Paragraph(f"<b>{escape(label)}</b>", body) for label in ("Поручение", "Ответственный", "Спикер", "Срок", "Статус")]]
+    rows: list[list[Any]] = [[Paragraph(f"<b>{escape(label)}</b>", body) for label in ACTION_HEADINGS]]
     for action in actions:
-        values = [action.get("task"), action.get("assignee"), action.get("speaker"), action.get("deadline"), action.get("status")]
-        rows.append([Paragraph(_html(str(value or "")), body) for value in values])
-    table = Table(rows, colWidths=[68 * mm, 29 * mm, 27 * mm, 30 * mm, 24 * mm], repeatRows=1, hAlign="LEFT")
+        rows.append([Paragraph(_html(value), body) for value in _action_row(action)])
+    table = Table(rows, colWidths=[56 * mm, 32 * mm, 26 * mm, 30 * mm, 20 * mm, 14 * mm], repeatRows=1, hAlign="LEFT")
     table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e8eef7")),
         ("GRID", (0, 0), (-1, -1), 0.35, colors.HexColor("#c5cfdd")),
@@ -86,9 +130,29 @@ def build_pdf(title: str, meeting_date: str, summary: str, actions: list[dict[st
     return buffer.getvalue()
 
 
+ACTION_HEADINGS = ["Поручение", "Ответственный", "Голос", "Срок", "Статус", "Время"]
+FONTS_DIR = Path(__file__).resolve().parents[1] / "assets" / "fonts"
+
+
+def _action_row(action: dict[str, Any]) -> list[str]:
+    deadline = str(action.get("deadline") or "Не указан")
+    if action.get("deadline_iso"):
+        deadline = f"{deadline} ({action['deadline_iso']})"
+    return [
+        str(action.get("task") or ""),
+        str(action.get("assignee") or ""),
+        str(action.get("speaker") or ""),
+        deadline,
+        str(action.get("status") or ""),
+        str(action.get("time") or ""),
+    ]
+
+
 def _register_unicode_font() -> tuple[str, str]:
     candidates = [
         (os.getenv("MEETING_FONT"), os.getenv("MEETING_FONT_BOLD")),
+        (str(FONTS_DIR / "DejaVuSans.ttf"), str(FONTS_DIR / "DejaVuSans-Bold.ttf")),
+        ("/System/Library/Fonts/Supplemental/Arial.ttf", "/System/Library/Fonts/Supplemental/Arial Bold.ttf"),
         (r"C:\Windows\Fonts\arial.ttf", r"C:\Windows\Fonts\arialbd.ttf"),
         ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
         ("/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf", "/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf"),

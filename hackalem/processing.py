@@ -6,15 +6,14 @@ import ipaddress
 import json
 import os
 import re
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import date, timedelta
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
-
-from faster_whisper import WhisperModel
-from faster_whisper.audio import decode_audio
+from typing import Any, Callable
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,15 +25,81 @@ DIARIZATION_PATH = Path(
         ROOT / "models" / "pyannote-speaker-diarization-community-1",
     )
 )
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:4b")
 
 # Pyannote's optional usage telemetry is disabled before it is imported.
 os.environ["PYANNOTE_METRICS_ENABLED"] = "0"
 os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
 os.environ["HF_HUB_OFFLINE"] = "1"
 
+ProgressFn = Callable[[float, str], None]
+WEEKDAYS = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
+
+
+def _notify(progress: ProgressFn | None, share: float, text: str) -> None:
+    if progress:
+        progress(min(max(share, 0.0), 1.0), text)
+
+
+# --------------------------------------------------------------------------- speech
+
+
+def transcribe_meeting(
+    audio_path: str | Path, expected_speakers: int | None = None, progress: ProgressFn | None = None
+) -> tuple[list[dict[str, Any]], str, float]:
+    """Diarize first, then recognize each speaker turn with the local model that fits its language.
+
+    Returns segments ``{id, start, end, speaker, text, lang, asr_model}``, a language summary
+    (e.g. ``kk+mix+ru``) and the duration in seconds. Falls back to the faster-whisper
+    pipeline when the Kazakh/Russian Whisper models are not downloaded.
+    """
+    from faster_whisper.audio import decode_audio
+
+    from hackalem import asr
+
+    if not asr.kz_available() and not asr.base_available():
+        _notify(progress, 0.1, "Модели kaz-rus не найдены — используем faster-whisper.")
+        segments, language, duration = transcribe(audio_path)
+        return diarize(audio_path, segments, expected_speakers), language, duration
+
+    waveform = decode_audio(str(audio_path), sampling_rate=16_000)
+    duration = len(waveform) / 16_000
+    _notify(progress, 0.05, "Определяем, кто и когда говорил (диаризация)…")
+    turns = _speaker_turns(waveform, expected_speakers)
+    speakers_found = len({label for _, _, label in turns})
+    _notify(progress, 0.15, f"Найдено голосов: {speakers_found}. Распознаём речь по репликам…")
+    segments = asr.transcribe_turns(
+        waveform, turns, progress=lambda share, text: _notify(progress, 0.15 + 0.8 * share, text)
+    )
+    if os.getenv("LOW_MEMORY", "1") == "1":
+        asr.release_models()
+
+    order = list(dict.fromkeys(segment["speaker"] for segment in segments))
+    aliases = {label: f"SPEAKER_{index + 1:02d}" for index, label in enumerate(order)}
+    for index, segment in enumerate(segments, start=1):
+        segment["speaker"] = aliases[segment["speaker"]]
+        segment["id"] = index
+    languages = sorted({segment["lang"] for segment in segments})
+    return segments, "+".join(languages) or "unknown", duration
+
+
+def _speaker_turns(waveform: Any, expected_speakers: int | None) -> list[tuple[float, float, str]]:
+    from hackalem import diarization_sherpa
+
+    backend = os.getenv("DIARIZATION_BACKEND", "sherpa")
+    if backend == "pyannote" and DIARIZATION_PATH.exists():
+        return _pyannote_turns(waveform, expected_speakers)
+    if diarization_sherpa.available():
+        return diarization_sherpa.diarize_waveform(waveform, expected_speakers)
+    if DIARIZATION_PATH.exists():
+        return _pyannote_turns(waveform, expected_speakers)
+    return [(0.0, len(waveform) / 16_000, "spk0")]
+
 
 @lru_cache(maxsize=1)
-def _whisper_model() -> WhisperModel:
+def _whisper_model() -> Any:
+    from faster_whisper import WhisperModel
+
     if not WHISPER_CACHE.exists():
         raise FileNotFoundError(
             f"Не найдена локальная модель Whisper в {WHISPER_CACHE}. "
@@ -58,8 +123,21 @@ def _diarization_pipeline() -> Any:
     return pipeline
 
 
+def _pyannote_turns(waveform: Any, expected_speakers: int | None) -> list[tuple[float, float, str]]:
+    import numpy as np
+    import torch
+
+    audio = {"waveform": torch.from_numpy(np.asarray(waveform, dtype=np.float32)).unsqueeze(0), "sample_rate": 16_000}
+    pipeline = _diarization_pipeline()
+    output = pipeline(audio, num_speakers=expected_speakers) if expected_speakers else pipeline(audio)
+    annotation = getattr(output, "exclusive_speaker_diarization", None)
+    if annotation is None:
+        annotation = getattr(output, "speaker_diarization", output)
+    return [(float(interval.start), float(interval.end), str(label)) for interval, _, label in annotation.itertracks(yield_label=True)]
+
+
 def transcribe(audio_path: str | Path) -> tuple[list[dict[str, Any]], str, float]:
-    """Transcribe audio locally and return timestamped segments, language, duration."""
+    """Legacy path: transcribe the whole file with faster-whisper."""
     segments_iter, info = _whisper_model().transcribe(
         str(audio_path),
         language=None,
@@ -77,26 +155,16 @@ def transcribe(audio_path: str | Path) -> tuple[list[dict[str, Any]], str, float
 
 
 def diarize(audio_path: str | Path, segments: list[dict[str, Any]], expected_speakers: int | None = None) -> list[dict[str, Any]]:
-    """Assign local speaker turns to transcript segments by maximum time overlap."""
-    import numpy as np
-    import torch
+    """Legacy path: assign speaker turns to transcript segments by maximum time overlap."""
+    from faster_whisper.audio import decode_audio
 
     waveform = decode_audio(str(audio_path), sampling_rate=16_000)
-    pipeline = _diarization_pipeline()
-    audio = {"waveform": torch.from_numpy(np.asarray(waveform, dtype=np.float32)).unsqueeze(0), "sample_rate": 16_000}
-    output = pipeline(audio, num_speakers=expected_speakers) if expected_speakers else pipeline(audio)
-    annotation = getattr(output, "exclusive_speaker_diarization", None)
-    if annotation is None:
-        annotation = output.speaker_diarization
-
-    turns: list[tuple[float, float, str]] = []
-    for interval, _, label in annotation.itertracks(yield_label=True):
-        turns.append((float(interval.start), float(interval.end), str(label)))
+    turns = _speaker_turns(waveform, expected_speakers)
     label_order = list(dict.fromkeys(label for _, _, label in sorted(turns)))
     aliases = {label: f"SPEAKER_{index + 1:02d}" for index, label in enumerate(label_order)}
 
     aligned: list[dict[str, Any]] = []
-    for segment in segments:
+    for index, segment in enumerate(segments, start=1):
         start, end = float(segment["start"]), float(segment["end"])
         overlaps = [
             (max(0.0, min(end, turn_end) - max(start, turn_start)), label)
@@ -104,8 +172,11 @@ def diarize(audio_path: str | Path, segments: list[dict[str, Any]], expected_spe
         ]
         overlap, label = max(overlaps, default=(0.0, ""))
         assigned = aliases.get(label, "Спикер не определён") if overlap > 0 else "Спикер не определён"
-        aligned.append({**segment, "speaker": assigned})
+        aligned.append({**segment, "id": index, "speaker": assigned, "lang": segment.get("lang", "")})
     return aligned
+
+
+# --------------------------------------------------------------------------- local LLM agent
 
 
 def _ollama_url() -> str:
@@ -121,27 +192,15 @@ def _ollama_url() -> str:
     return base
 
 
-def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str) -> dict[str, Any]:
-    transcript = "\n".join(
-        f"[{_stamp(item['start'])}-{_stamp(item['end'])}] [{item.get('speaker', 'Спикер не определён')}] {item['text']}"
-        for item in segments
-    )
-    if len(transcript) > 32_000:
-        transcript = transcript[:32_000] + "\n[Транскрипт обрезан для локального анализа]"
-    prompt = f"""Проанализируй протокол совещания. Вход может быть на русском, казахском или на их смеси. Не добавляй факты, которых нет в тексте. Не считай обычное обсуждение поручением. Если ответственный или срок не названы, укажи «Не определён» или «Не указан». Поле speaker должно совпадать с меткой спикера в исходной реплике, если её можно определить. Дата совещания: {meeting_date}.
-
-Верни только JSON-объект формата:
-{{"summary":"краткое саммари на русском языке","actions":[{{"task":"конкретное поручение","assignee":"имя или Не определён","speaker":"SPEAKER_01 или Спикер не определён","deadline":"срок словами или Не указан","deadline_iso":"YYYY-MM-DD если дата точна, иначе пустая строка","status":"В работе","source_quote":"короткая точная цитата"}}]}}
-
-Транскрипт:
-{transcript}
-"""
+def _ollama_json(prompt: str, schema: dict[str, Any]) -> dict[str, Any]:
     payload = {
-        "model": os.getenv("OLLAMA_MODEL", "qwen2.5:3b"),
+        "model": OLLAMA_MODEL,
         "messages": [{"role": "user", "content": prompt}],
-        "format": "json",
+        "format": schema,
         "stream": False,
-        "options": {"temperature": 0},
+        "think": False,
+        "keep_alive": os.getenv("OLLAMA_KEEP_ALIVE", "60s"),
+        "options": {"temperature": 0, "num_ctx": int(os.getenv("OLLAMA_NUM_CTX", "8192"))},
     }
     request = urllib.request.Request(
         f"{_ollama_url()}/api/chat",
@@ -149,21 +208,246 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str) -> di
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=300) as response:
+    with urllib.request.urlopen(request, timeout=int(os.getenv("OLLAMA_TIMEOUT", "600"))) as response:
         body = json.loads(response.read().decode("utf-8"))
     content = body.get("message", {}).get("content", "")
+    content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
     result = json.loads(content)
-    if not isinstance(result, dict) or not isinstance(result.get("actions", []), list):
+    if not isinstance(result, dict):
         raise ValueError("Локальная модель вернула неожиданный формат результата.")
-    result.setdefault("summary", "Саммари не сформировано.")
-    valid_actions = [item for item in result.get("actions", []) if isinstance(item, dict)]
-    result["actions"] = valid_actions
-    for action in valid_actions:
-        for field, default in (("task", ""), ("assignee", "Не определён"), ("speaker", "Спикер не определён"), ("deadline", "Не указан"), ("deadline_iso", ""), ("status", "В работе"), ("source_quote", "")):
-            action[field] = str(action.get(field) or default)
-        if action["status"] not in {"В работе", "Просрочено", "Выполнено"}:
-            action["status"] = "В работе"
     return result
+
+
+OVERVIEW_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "participants": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {"speaker": {"type": "string"}, "name": {"type": "string"}, "role": {"type": "string"}},
+                "required": ["speaker", "name", "role"],
+            },
+        },
+        "summary": {"type": "string"},
+        "summary_items": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {"topic": {"type": "string"}, "indicator": {"type": "string"}, "problem": {"type": "string"}},
+                "required": ["topic", "indicator", "problem"],
+            },
+        },
+    },
+    "required": ["participants", "summary", "summary_items"],
+}
+
+ACTIONS_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "actions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "task": {"type": "string"},
+                    "assignee": {"type": "string"},
+                    "assignee_speaker": {"type": "string"},
+                    "assigned_by": {"type": "string"},
+                    "deadline": {"type": "string"},
+                    "deadline_iso": {"type": "string"},
+                    "segment_id": {"type": "integer"},
+                    "source_quote": {"type": "string"},
+                    "priority": {"type": "string", "enum": ["высокий", "средний", "низкий"]},
+                },
+                "required": ["task", "assignee", "assignee_speaker", "assigned_by", "deadline", "deadline_iso", "segment_id", "source_quote", "priority"],
+            },
+        },
+        "flags": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": ["actions", "flags"],
+}
+
+ACTION_RULES = """Правила извлечения поручений:
+1. Поручение — действие, которое конкретный человек или подразделение должен выполнить после совещания. Обычный доклад, мнение или вопрос — не поручение. Предложение участника становится поручением, только если председатель его принял («Согласен», «Логично», «Хорошо»).
+2. Делегирование: «пусть Ерлан подготовит…» — ответственный Ерлан, даже если его нет на совещании.
+3. Ответственным может быть подразделение («юридический департамент»).
+4. Если срок обсуждали несколько раз («две недели?» — «маловато» — «три недели, к пятнадцатому октября»), бери ПОСЛЕДНИЙ согласованный срок.
+5. Если срок не назван — deadline = «Не указан», deadline_iso = "". НИКОГДА не придумывай срок.
+6. Относительные сроки («до пятницы», «до конца недели», «на этой неделе», «за две недели», «к среде», «на следующей неделе») и даты словами («к пятнадцатому октября») переведи в дату YYYY-MM-DD по календарю ниже, считая от даты совещания. «До конца недели» и «на этой неделе» = ближайшая пятница. «Следующая неделя» = пятница следующей недели. «За N недель» = дата совещания + N×7 дней.
+7. В конце совещания председатель часто подводит итоги. Итоги НЕ создают новых поручений: не дублируй уже найденные. Если итоги противоречат обсуждению (другой ответственный или срок), верь конкретной договорённости из обсуждения и добавь запись в flags.
+8. Самопоручение («за неделю дам смету») — ответственный сам говорящий.
+9. Одна реплика может содержать несколько поручений — выпиши каждое отдельно.
+10. Речь может быть на казахском или смешанной (шала-казахский). Формулируй task по-русски, кратко, с глагола («Подготовить…», «Провести…»).
+11. assignee — имя и, если известно, должность или подразделение. assignee_speaker — метка SPEAKER_XX ответственного, если он говорил на совещании, иначе "".
+12. assigned_by — кто дал поручение. segment_id — номер реплики [#N], где поручение дано окончательно. source_quote — короткая дословная цитата из этой реплики.
+13. priority: «высокий» — безопасность, штрафы, срыв сроков, срок до 7 дней; «низкий» — справочные задачи без срока; иначе «средний».
+14. В flags запиши поручения без срока и без явного ответственного, а также противоречия."""
+
+
+def _meeting_calendar(meeting_date: str, days: int = 45) -> str:
+    start = date.fromisoformat(meeting_date)
+    return "; ".join(
+        f"{(start + timedelta(days=offset)).isoformat()} {WEEKDAYS[(start + timedelta(days=offset)).weekday()]}"
+        for offset in range(days)
+    )
+
+
+def _transcript_text(segments: list[dict[str, Any]], names: dict[str, str] | None = None) -> str:
+    names = names or {}
+    lines = []
+    for index, item in enumerate(segments, start=1):
+        speaker = str(item.get("speaker", "Спикер не определён"))
+        label = f"{speaker} ({names[speaker]})" if names.get(speaker) else speaker
+        lang = f" ({item['lang']})" if item.get("lang") else ""
+        lines.append(f"[#{item.get('id', index)} {_stamp(item['start'])}] {label}{lang}: {item['text']}")
+    transcript = "\n".join(lines)
+    limit = int(os.getenv("TRANSCRIPT_CHAR_LIMIT", "24000"))
+    if len(transcript) > limit:
+        transcript = transcript[:limit] + "\n[Транскрипт обрезан для локального анализа]"
+    return transcript
+
+
+def _overview_prompt(transcript: str, meeting_date: str) -> str:
+    return f"""Ты — секретарь совещания в казахстанской компании. Ниже транскрипт: [#номер мм:сс] SPEAKER_XX (язык): реплика. Речь на русском, казахском или смешанная.
+
+Задача 1. Определи участников: для каждой метки SPEAKER_XX найди имя (обычно имя-отчество) и должность. Подсказки: к человеку обращаются по имени перед его репликой («Жандос Талгатович, по инвестициям что у нас?» → следующий говорящий — Жандос Талгатович); председатель открывает и закрывает совещание и раздаёт поручения. Если имя нельзя установить — name = "".
+Задача 2. Кратко перескажи итоги совещания на русском (3–5 предложений) в поле summary.
+Задача 3. summary_items — по каждому направлению или докладу: topic (направление и докладчик), indicator (ключевой показатель, цифра), problem (озвученная проблема). Не выдумывай — только то, что сказано.
+
+Дата совещания: {meeting_date}.
+
+Транскрипт:
+{transcript}"""
+
+
+def _actions_prompt(transcript: str, meeting_date: str) -> str:
+    weekday = WEEKDAYS[date.fromisoformat(meeting_date).weekday()]
+    return f"""Ты — секретарь совещания. Извлеки из транскрипта ВСЕ поручения (кто, что, к какому сроку).
+
+{ACTION_RULES}
+
+Дата совещания: {meeting_date} ({weekday}).
+Календарь от даты совещания: {_meeting_calendar(meeting_date)}.
+
+Транскрипт ([#номер мм:сс] SPEAKER_XX (имя) (язык): реплика):
+{transcript}"""
+
+
+def _verify_prompt(transcript: str, meeting_date: str, actions: list[dict[str, Any]]) -> str:
+    weekday = WEEKDAYS[date.fromisoformat(meeting_date).weekday()]
+    draft = json.dumps({"actions": actions}, ensure_ascii=False, indent=1)
+    return f"""Ты — контролёр качества протокола. Проверь черновой список поручений по транскрипту и верни исправленный список.
+Проверь каждое поручение: действительно ли оно было дано; правильный ли ответственный (с учётом делегирования); взят ли последний согласованный срок; правильно ли срок переведён в дату по календарю; нет ли дубликатов из итогов совещания; не пропущено ли поручение из обсуждения. Удали выдуманные поручения. Добавь пропущенные.
+
+{ACTION_RULES}
+
+Дата совещания: {meeting_date} ({weekday}).
+Календарь: {_meeting_calendar(meeting_date)}.
+
+Черновик:
+{draft}
+
+Транскрипт:
+{transcript}"""
+
+
+def _clean_actions(
+    raw_actions: list[Any], segments: list[dict[str, Any]], meeting_date: str, names: dict[str, str], flags: list[str]
+) -> list[dict[str, Any]]:
+    by_id = {int(item.get("id", index)): item for index, item in enumerate(segments, start=1)}
+    start_date = date.fromisoformat(meeting_date)
+    today = date.today()
+    cleaned: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for item in raw_actions:
+        if not isinstance(item, dict) or not str(item.get("task", "")).strip():
+            continue
+        action = {
+            key: str(item.get(key) or "").strip()
+            for key in ("task", "assignee", "assignee_speaker", "assigned_by", "deadline", "deadline_iso", "source_quote", "priority")
+        }
+        key = (action["task"].lower()[:60], action["assignee"].lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        action["assignee"] = action["assignee"] or "Не определён"
+        action["deadline"] = action["deadline"] or "Не указан"
+        action["priority"] = action["priority"] or "средний"
+        try:
+            due = date.fromisoformat(action["deadline_iso"]) if action["deadline_iso"] else None
+        except ValueError:
+            due = None
+        if due and due < start_date:
+            flags.append(f"Срок «{action['deadline']}» для «{action['task']}» раньше даты совещания — дата сброшена, проверьте вручную.")
+            due = None
+        action["deadline_iso"] = due.isoformat() if due else ""
+        if not due and action["deadline"].lower().startswith("не указ"):
+            flags.append(f"Поручение без срока: «{action['task']}» ({action['assignee']}).")
+        speaker = action.pop("assignee_speaker")
+        action["speaker"] = f"{speaker} ({names[speaker]})" if names.get(speaker) else (speaker or "не выступал на записи")
+        try:
+            segment = by_id.get(int(item.get("segment_id") or 0))
+        except (TypeError, ValueError):
+            segment = None
+        action["time"] = _stamp(segment["start"]) if segment else ""
+        action["segment_id"] = int(segment.get("id", 0)) if segment else 0
+        if not action["source_quote"] and segment:
+            action["source_quote"] = segment["text"][:200]
+        action["status"] = "Просрочено" if due and due < today else "В работе"
+        cleaned.append(action)
+    return cleaned
+
+
+def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str, progress: ProgressFn | None = None) -> dict[str, Any]:
+    trace: list[dict[str, Any]] = []
+
+    def step(name: str, share: float, run: Callable[[], dict[str, Any]]) -> dict[str, Any]:
+        _notify(progress, share, f"ИИ-агент: {name}…")
+        started = time.time()
+        result = run()
+        trace.append({"step": name, "seconds": round(time.time() - started, 1)})
+        return result
+
+    raw_transcript = _transcript_text(segments)
+    overview = step("определяю участников и итоги", 0.1, lambda: _ollama_json(_overview_prompt(raw_transcript, meeting_date), OVERVIEW_SCHEMA))
+    names = {
+        str(item.get("speaker", "")).strip(): str(item.get("name", "")).strip()
+        for item in overview.get("participants", [])
+        if isinstance(item, dict) and str(item.get("name", "")).strip()
+    }
+    trace[-1]["result"] = f"участников с именем: {len(names)}"
+    named_transcript = _transcript_text(segments, names)
+    drafted = step("извлекаю поручения", 0.4, lambda: _ollama_json(_actions_prompt(named_transcript, meeting_date), ACTIONS_SCHEMA))
+    actions = drafted.get("actions", [])
+    flags = [str(flag) for flag in drafted.get("flags", [])]
+    trace[-1]["result"] = f"черновик: {len(actions)} поручений"
+    if os.getenv("AGENT_VERIFY", "1") == "1":
+        verified = step("проверяю поручения по транскрипту", 0.7, lambda: _ollama_json(_verify_prompt(named_transcript, meeting_date, actions), ACTIONS_SCHEMA))
+        if verified.get("actions"):
+            actions = verified["actions"]
+            flags = [str(flag) for flag in verified.get("flags", [])] or flags
+        trace[-1]["result"] = f"после проверки: {len(actions)} поручений"
+    cleaned = _clean_actions(actions, segments, meeting_date, names, flags)
+    participants = [
+        {"speaker": str(item.get("speaker", "")), "name": str(item.get("name", "")), "role": str(item.get("role", ""))}
+        for item in overview.get("participants", [])
+        if isinstance(item, dict)
+    ]
+    summary_items = [
+        {key: str(item.get(key, "")) for key in ("topic", "indicator", "problem")}
+        for item in overview.get("summary_items", [])
+        if isinstance(item, dict)
+    ]
+    return {
+        "summary": str(overview.get("summary") or "Саммари не сформировано."),
+        "summary_items": summary_items,
+        "participants": participants,
+        "actions": cleaned,
+        "flags": list(dict.fromkeys(flags)),
+        "agent_trace": trace,
+        "model": OLLAMA_MODEL,
+    }
 
 
 _TASK_MARKERS = re.compile(
@@ -176,8 +460,8 @@ def _heuristic_analysis(segments: list[dict[str, Any]]) -> dict[str, Any]:
     """Fallback when Ollama is unavailable; results are visibly marked for review."""
     texts = [item["text"].strip() for item in segments if item.get("text", "").strip()]
     summary = " ".join(texts[:3])[:900] or "Транскрипт не содержит распознанной речи."
-    actions: list[dict[str, str]] = []
-    for item in segments:
+    actions: list[dict[str, Any]] = []
+    for index, item in enumerate(segments, start=1):
         text = item.get("text", "").strip()
         if not text or not _TASK_MARKERS.search(text):
             continue
@@ -187,24 +471,32 @@ def _heuristic_analysis(segments: list[dict[str, Any]]) -> dict[str, Any]:
             {
                 "task": text,
                 "assignee": "Не определён",
+                "assigned_by": str(item.get("speaker", "")),
                 "speaker": str(item.get("speaker", "Спикер не определён")),
                 "deadline": due_match.group(1).strip() if due_match else "Не указан",
                 "deadline_iso": iso_match.group(1) if iso_match else "",
                 "status": "В работе",
+                "priority": "средний",
+                "time": _stamp(item.get("start", 0)),
+                "segment_id": int(item.get("id", index)),
                 "source_quote": text,
             }
         )
-    return {"summary": summary, "actions": actions}
+    return {"summary": summary, "summary_items": [], "participants": [], "actions": actions, "flags": [], "agent_trace": [], "model": "heuristic"}
 
 
-def analyze_meeting(segments: list[dict[str, Any]], meeting_date: str) -> tuple[dict[str, Any], str, str | None]:
-    """Use local Ollama; fall back to transparent keyword extraction if it is offline."""
+def analyze_meeting(
+    segments: list[dict[str, Any]], meeting_date: str, progress: ProgressFn | None = None
+) -> tuple[dict[str, Any], str, str | None]:
+    """Use the local Ollama agent; fall back to transparent keyword extraction if it is offline."""
     if not segments:
         return {"summary": "Речь не распознана.", "actions": []}, "fallback", "В записи не найден распознанный текст."
     try:
-        return _local_llm_analysis(segments, meeting_date), "ollama", None
-    except (OSError, TimeoutError, ValueError, urllib.error.URLError, json.JSONDecodeError) as exc:
+        return _local_llm_analysis(segments, meeting_date, progress), "ollama", None
+    except (OSError, TimeoutError, ValueError, KeyError, urllib.error.URLError, json.JSONDecodeError) as exc:
         return _heuristic_analysis(segments), "fallback", f"Локальный Ollama недоступен; включено упрощённое извлечение. Проверьте поручения вручную. ({exc})"
 
 
-
+def _stamp(seconds: float) -> str:
+    total = max(0, int(float(seconds or 0)))
+    return f"{total // 60:02d}:{total % 60:02d}"

@@ -1,7 +1,13 @@
 streamlit>=1.40,<2
 faster-whisper>=1.1,<2
-pyannote.audio>=4,<5
 huggingface_hub>=0.27
+torch>=2.5
+transformers>=4.57
+peft>=0.18
+sherpa-onnx>=1.12
+numpy>=1.26
 python-docx>=1.1,<2
 reportlab>=4,<5
 pandas>=2,<3
+# Необязательно: диаризация pyannote Community-1 (нужен HF_TOKEN)
+# pyannote.audio>=4,<5

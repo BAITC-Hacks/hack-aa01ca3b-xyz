@@ -10,10 +10,12 @@ import streamlit as st
 
 from hackalem.export import build_docx, build_pdf
 from hackalem.media import prepare_audio
-from hackalem.processing import analyze_meeting, diarize, transcribe
+from hackalem.processing import analyze_meeting, transcribe_meeting
 
 
-st.set_page_config(page_title="HackAlem AI — протокол совещания", page_icon="🎙️", layout="wide")
+st.set_page_config(page_title="Хаттама — протокол совещания", page_icon="🎙️", layout="wide")
+
+LANG_LABELS = {"ru": "русский", "kk": "казахский", "mix": "шала (смешанная)", "en": "английский"}
 
 
 def _stamp(seconds: float) -> str:
@@ -21,46 +23,65 @@ def _stamp(seconds: float) -> str:
     return f"{total // 60:02d}:{total % 60:02d}"
 
 
+def _seconds(stamp: str) -> int:
+    try:
+        minutes, seconds = str(stamp).split(":")
+        return int(minutes) * 60 + int(seconds)
+    except ValueError:
+        return 0
+
+
 def _speaker_ids(segments: list[dict[str, Any]]) -> list[str]:
     return list(dict.fromkeys(str(item.get("speaker", "Спикер не определён")) for item in segments))
 
 
-def _process(upload: Any, meeting_title: str, meeting_date: date, expected_speakers: int | None) -> dict[str, Any]:
+def _process(upload: Any, meeting_title: str, meeting_date: date, expected_speakers: int | None, bar: Any) -> dict[str, Any]:
     suffix = Path(upload.name).suffix.lower() or ".audio"
+    audio_bytes = upload.getvalue()
     with tempfile.TemporaryDirectory(prefix="hackalem-") as temp_dir:
         source_path = Path(temp_dir) / f"recording{suffix}"
-        source_path.write_bytes(upload.getvalue())
+        source_path.write_bytes(audio_bytes)
         audio_path = prepare_audio(source_path, temp_dir)
-        segments, language, duration = transcribe(audio_path)
-        turns = diarize(audio_path, segments, expected_speakers)
-        if not turns and segments:
-            raise RuntimeError("Диаризация не вернула говорящих. Проверьте запись и модель pyannote.")
-        analysis, analysis_mode, analysis_note = analyze_meeting(turns, meeting_date.isoformat())
+        segments, language, duration = transcribe_meeting(
+            audio_path, expected_speakers, progress=lambda share, text: bar.progress(0.6 * share, text=text)
+        )
+        if not segments:
+            raise RuntimeError("В записи не найдена речь. Проверьте файл.")
+        analysis, analysis_mode, analysis_note = analyze_meeting(
+            segments, meeting_date.isoformat(), progress=lambda share, text: bar.progress(0.6 + 0.4 * share, text=text)
+        )
+        bar.progress(1.0, text="Протокол готов")
         return {
             "title": meeting_title.strip() or "Протокол совещания",
             "date": meeting_date.isoformat(),
             "language": language,
             "duration": duration,
-            "transcript": turns,
+            "transcript": segments,
             "summary": str(analysis.get("summary", "")),
+            "summary_items": analysis.get("summary_items", []),
+            "participants": analysis.get("participants", []),
             "actions": analysis.get("actions", []),
+            "flags": analysis.get("flags", []),
+            "agent_trace": analysis.get("agent_trace", []),
+            "model": analysis.get("model", ""),
             "analysis_mode": analysis_mode,
             "analysis_note": analysis_note,
+            "audio": audio_bytes,
+            "audio_format": f"audio/{'mpeg' if suffix == '.mp3' else suffix.lstrip('.')}",
         }
 
 
-st.title("🎙️ HackAlem AI")
-st.subheader("Автопротоколирование совещаний с фиксацией поручений")
-st.write("Загрузите запись. Приложение распознает русскую, казахскую и смешанную речь, подпишет реплики спикерами, соберёт поручения и подготовит протокол.")
-st.info("Аудио и транскрипт обрабатываются локально. Приложение не отправляет их во внешние API. Участники должны быть уведомлены о записи и её обработке.", icon="🔒")
+st.title("🎙️ Хаттама")
+st.subheader("Автопротоколирование совещаний с фиксацией поручений — русский, қазақша, шала")
+st.write("Загрузите запись. Приложение разделит голоса участников, распознает русскую, казахскую и смешанную речь, определит, кто есть кто, соберёт поручения со сроками и подготовит протокол.")
+st.info("Аудио и транскрипт обрабатываются только на этом компьютере. Внешние API не используются — решение можно развернуть в закрытом контуре. Участники должны быть уведомлены о записи и её обработке ИИ.", icon="🔒")
 
 with st.expander("Подготовка моделей"):
     st.markdown(
-        """1. Один раз установите модели командой `python scripts/download_models.py`.
-2. Для скачивания pyannote заранее примите условия модели `pyannote/speaker-diarization-community-1` на Hugging Face и задайте `HF_TOKEN`.
-3. Для качественного извлечения поручений запустите локальный Ollama и модель `qwen2.5:3b`. Без неё приложение покажет упрощённый результат по ключевым словам.
+        """1. Один раз скачайте модели: `python scripts/download_models.py` (аккаунты и токены не нужны).
+2. Запустите локальный Ollama и скачайте модель: `ollama pull qwen3:4b`. Без неё приложение покажет упрощённый результат по ключевым словам.
 
-Загрузка весов моделей происходит отдельно. Во время обработки аудио и текста сеть не используется."""
+Скачиваются только веса моделей. Во время обработки аудио и текста сеть не используется."""
     )
 
 left, right = st.columns([2, 1])
@@ -68,22 +89,27 @@ with left:
     meeting_title = st.text_input("Название совещания", value="Совещание")
     upload = st.file_uploader(
         "Аудио или видео",
-        type=["wav", "mp3", "m4a", "mp4", "mov", "mkv", "webm", "avi"],
-        help="Для видео требуется ffmpeg. Файл хранится только во временной папке и удаляется после обработки.",
+        type=["wav", "mp3", "m4a", "ogg", "mp4", "mov", "mkv", "webm", "avi"],
+        help="Файл хранится только во временной папке и удаляется после обработки.",
     )
 with right:
-    meeting_date = st.date_input("Дата совещания", value=date.today())
+    meeting_date = st.date_input("Дата совещания", value=date.today(), help="От этой даты считаются сроки «до пятницы», «за две недели» и т. п.")
     expected_speakers = st.number_input("Ожидаемое число участников (подсказка)", min_value=0, max_value=30, value=0, help="0 — определить автоматически")
 
-consent = st.checkbox("Запись сделана с согласия участников; при демонстрации реальные данные обезличены.")
+consent = st.checkbox("Участники уведомлены о записи и расшифровке с помощью ИИ; при демонстрации реальные данные обезличены.")
 start_processing = st.button("Создать протокол", type="primary", disabled=not (upload and consent), use_container_width=False)
 
 if start_processing and upload:
     progress = st.status("Обработка идёт на этом компьютере…", expanded=True)
     try:
-        progress.write("Распознавание речи, затем определение спикеров и извлечение поручений.")
-        result = _process(upload, meeting_title, meeting_date, int(expected_speakers) or None)
+        bar = progress.progress(0.0, text="Подготовка записи…")
+        result = _process(upload, meeting_title, meeting_date, int(expected_speakers) or None, bar)
         st.session_state["meeting_result"] = result
+        st.session_state["speaker_names"] = {
+            item["speaker"]: " — ".join(part for part in (item.get("name", ""), item.get("role", "")) if part)
+            for item in result["participants"]
+            if item.get("speaker") and item.get("name")
+        }
         progress.update(label="Протокол готов", state="complete", expanded=False)
     except Exception as error:
         progress.update(label="Не удалось обработать запись", state="error", expanded=True)
@@ -94,31 +120,33 @@ result = st.session_state.get("meeting_result")
 if result:
     st.divider()
     st.header(result["title"])
-    lang_labels = {"ru": "русский", "kk": "казахский", "en": "английский"}
-    language_label = lang_labels.get(result["language"], result["language"])
-    st.caption(f"Дата: {result['date']} · Распознанный язык: {language_label} · Длительность: {_stamp(result['duration'])}")
+    languages = ", ".join(LANG_LABELS.get(code, code) for code in str(result["language"]).split("+"))
+    st.caption(f"Дата: {result['date']} · Языки в записи: {languages} · Длительность: {_stamp(result['duration'])} · Модель анализа: {result.get('model', '')}")
     if result.get("analysis_note"):
         st.warning(result["analysis_note"])
 
     st.subheader("Саммари")
     st.write(result["summary"] or "Саммари не сформировано.")
+    if result.get("summary_items"):
+        st.dataframe(
+            pd.DataFrame(result["summary_items"]).rename(columns={"topic": "Направление / доклад", "indicator": "Показатель", "problem": "Проблема"}),
+            hide_index=True,
+            use_container_width=True,
+        )
 
     speaker_names = st.session_state.setdefault("speaker_names", {})
-    with st.expander("Имена участников"):
-        st.caption("Диаризация различает голоса, но не устанавливает личность. При необходимости сопоставьте метки с именами вручную.")
+    with st.expander("Участники (определены ИИ по обращениям — можно исправить)", expanded=True):
+        st.caption("Голоса различает диаризация, имена ИИ-агент выводит из обращений («Тимур Болатович, что по Павлодару?»). Проверьте и при необходимости исправьте.")
         for speaker in _speaker_ids(result["transcript"]):
             speaker_names[speaker] = st.text_input(speaker, value=speaker_names.get(speaker, speaker), key=f"name_{speaker}")
 
     actions = [dict(item) for item in result["actions"]]
     for action in actions:
         action["speaker"] = speaker_names.get(action.get("speaker", ""), action.get("speaker", "Спикер не определён"))
-        action.setdefault("task", "")
-        action.setdefault("assignee", "Не определён")
-        action.setdefault("deadline", "Не указан")
-        action.setdefault("deadline_iso", "")
-        action.setdefault("status", "В работе")
-        action.setdefault("source_quote", "")
-    action_frame = pd.DataFrame(actions, columns=["task", "assignee", "speaker", "deadline", "deadline_iso", "status", "source_quote"])
+        for field, default in (("task", ""), ("assignee", "Не определён"), ("assigned_by", ""), ("deadline", "Не указан"), ("deadline_iso", ""), ("status", "В работе"), ("priority", "средний"), ("time", ""), ("source_quote", "")):
+            action.setdefault(field, default)
+    columns = ["task", "assignee", "deadline", "deadline_iso", "status", "priority", "assigned_by", "time", "source_quote"]
+    action_frame = pd.DataFrame(actions, columns=columns)
     st.subheader(f"Поручения ({len(action_frame)})")
     edited_actions = st.data_editor(
         action_frame,
@@ -128,23 +156,38 @@ if result:
         column_config={
             "task": st.column_config.TextColumn("Поручение", width="large"),
             "assignee": st.column_config.TextColumn("Ответственный"),
-            "speaker": st.column_config.TextColumn("Спикер"),
-            "deadline": st.column_config.TextColumn("Срок"),
+            "deadline": st.column_config.TextColumn("Срок (как сказано)"),
             "deadline_iso": st.column_config.TextColumn("Срок (дата)", help="YYYY-MM-DD для напоминаний"),
             "status": st.column_config.SelectboxColumn("Статус", options=["В работе", "Просрочено", "Выполнено"]),
-            "source_quote": st.column_config.TextColumn("Фрагмент записи", width="large"),
+            "priority": st.column_config.SelectboxColumn("Срочность", options=["высокий", "средний", "низкий"]),
+            "assigned_by": st.column_config.TextColumn("Кто поручил"),
+            "time": st.column_config.TextColumn("Время", help="Момент записи, где дано поручение"),
+            "source_quote": st.column_config.TextColumn("Цитата из записи", width="large"),
         },
         key="actions_editor",
     )
     current_actions = edited_actions.fillna("").to_dict(orient="records")
+    for flag in result.get("flags", []):
+        st.warning(flag, icon="⚠️")
+
+    if result.get("audio"):
+        with st.expander("🔊 Доказательство: прослушать момент, где дано поручение"):
+            labels = [f"{row['time'] or '00:00'} — {row['task']}" for row in current_actions]
+            if labels:
+                choice = st.selectbox("Поручение", options=range(len(labels)), format_func=lambda index: labels[index])
+                st.audio(result["audio"], format=result.get("audio_format", "audio/mpeg"), start_time=_seconds(current_actions[choice]["time"]))
+                st.caption(f"Цитата: «{current_actions[choice]['source_quote']}»")
+
     csv_columns = {
         "task": "Поручение",
         "assignee": "Ответственный",
-        "speaker": "Спикер",
         "deadline": "Срок",
         "deadline_iso": "Срок (дата)",
         "status": "Статус",
-        "source_quote": "Фрагмент записи",
+        "priority": "Срочность",
+        "assigned_by": "Кто поручил",
+        "time": "Время",
+        "source_quote": "Цитата",
     }
     csv_actions = pd.DataFrame(current_actions, columns=csv_columns).rename(columns=csv_columns)
     csv_actions = csv_actions.map(
@@ -174,9 +217,9 @@ if result:
         except ValueError:
             continue
         if due_date < date.today():
-            reminders.append(("Просрочено", str(row.get("task", "Поручение"))))
+            reminders.append(("Просрочено", f"{row.get('task', 'Поручение')} — {row.get('assignee', '')}"))
         elif (due_date - date.today()).days <= 7:
-            reminders.append(("Срок скоро", str(row.get("task", "Поручение"))))
+            reminders.append(("Срок скоро", f"{row.get('task', 'Поручение')} — {row.get('assignee', '')}, до {due_text}"))
     if reminders:
         st.subheader("Напоминания по срокам")
         for label, task in reminders:
@@ -186,22 +229,39 @@ if result:
                 st.warning(f"{label} (7 дней): {task}")
 
     transcript_view = [
-        {"Время": f"{_stamp(item['start'])}–{_stamp(item['end'])}", "Спикер": speaker_names.get(item.get("speaker", ""), item.get("speaker", "Спикер не определён")), "Реплика": item["text"]}
+        {
+            "Время": f"{_stamp(item['start'])}–{_stamp(item['end'])}",
+            "Спикер": speaker_names.get(item.get("speaker", ""), item.get("speaker", "Спикер не определён")),
+            "Язык": LANG_LABELS.get(item.get("lang", ""), item.get("lang", "")),
+            "Реплика": item["text"],
+        }
         for item in result["transcript"]
     ]
-    with st.expander(f"Полный транскрипт ({len(transcript_view)} фрагментов)"):
+    with st.expander(f"Полный транскрипт ({len(transcript_view)} реплик)"):
         st.dataframe(pd.DataFrame(transcript_view), hide_index=True, use_container_width=True)
+
+    if result.get("agent_trace"):
+        with st.expander("🤖 Как работал ИИ-агент"):
+            st.caption("Цепочка шагов локальной модели: определение участников → извлечение поручений → самопроверка по транскрипту → детерминированная проверка дат.")
+            st.dataframe(
+                pd.DataFrame(result["agent_trace"]).rename(columns={"step": "Шаг", "seconds": "Секунд", "result": "Результат"}),
+                hide_index=True,
+                use_container_width=True,
+            )
 
     st.subheader("Экспорт протокола")
     final_transcript = [
         {**item, "speaker": speaker_names.get(item.get("speaker", ""), item.get("speaker", "Спикер не определён"))}
         for item in result["transcript"]
     ]
-    docx_bytes = build_docx(result["title"], result["date"], result["summary"], current_actions, final_transcript)
-    pdf_bytes = build_pdf(result["title"], result["date"], result["summary"], current_actions, final_transcript)
+    participants = [
+        {"speaker": speaker, "name": speaker_names.get(speaker, speaker)} for speaker in _speaker_ids(result["transcript"])
+    ]
+    docx_bytes = build_docx(result["title"], result["date"], result["summary"], current_actions, final_transcript, participants=participants, summary_items=result.get("summary_items"))
+    pdf_bytes = build_pdf(result["title"], result["date"], result["summary"], current_actions, final_transcript, participants=participants, summary_items=result.get("summary_items"))
     safe_name = "".join(character if character.isalnum() or character in "-_" else "_" for character in result["title"]).strip("_") or "meeting"
     docx_col, pdf_col = st.columns(2)
     docx_col.download_button("Скачать DOCX", data=docx_bytes, file_name=f"{safe_name}.docx", mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document", use_container_width=True)
     pdf_col.download_button("Скачать PDF", data=pdf_bytes, file_name=f"{safe_name}.pdf", mime="application/pdf", use_container_width=True)
 
-st.caption("Протокол и извлечённые поручения нужно проверить перед рассылкой. Автоматическая интеграция с Teams, Zoom, Google Meet и СЭД не входит в этот прототип.")
+st.caption("Протокол и извлечённые поручения нужно проверить перед рассылкой. Интеграции с Teams, Zoom, Google Meet и СЭД — следующий этап развития.")
