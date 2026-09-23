@@ -37,7 +37,7 @@ streamlit run app/main.py --server.address 127.0.0.1 --server.port 8501
 
 ## API и React-интерфейс
 
-FastAPI предоставляет обработку записи (`POST /api/meetings/process`), экспорт проверенного результата (`POST /api/meetings/export`) и проверку готовности (`GET /api/health`). API слушает локальную машину при запуске вне Docker:
+FastAPI предоставляет обработку записи (`POST /api/meetings/process`), экспорт проверенного результата (`POST /api/meetings/export`), liveness (`GET /api/health`) и проверку локальных моделей (`GET /api/health/ready`). API принимает файлы до 512 МБ, обрабатывает по одной тяжёлой записи за раз и удаляет временный файл после обработки. API слушает локальную машину при запуске вне Docker:
 
 ```bash
 uvicorn app.api.main:app --host 127.0.0.1 --port 8000
