@@ -137,6 +137,28 @@ if result:
         key="actions_editor",
     )
     current_actions = edited_actions.fillna("").to_dict(orient="records")
+    csv_columns = {
+        "task": "Поручение",
+        "assignee": "Ответственный",
+        "speaker": "Спикер",
+        "deadline": "Срок",
+        "deadline_iso": "Срок (дата)",
+        "status": "Статус",
+        "source_quote": "Фрагмент записи",
+    }
+    csv_actions = pd.DataFrame(current_actions, columns=csv_columns).rename(columns=csv_columns)
+    csv_actions = csv_actions.map(
+        lambda value: "'" + value
+        if isinstance(value, str) and value.lstrip().startswith(("=", "+", "-", "@"))
+        else value
+    )
+    st.download_button(
+        "Скачать поручения CSV",
+        data=csv_actions.to_csv(index=False).encode("utf-8-sig"),
+        file_name="porucheniya.csv",
+        mime="text/csv",
+        help="Скачивает текущие поручения с учётом правок и статусов.",
+    )
     counts = {label: sum(row.get("status") == label for row in current_actions) for label in ["В работе", "Просрочено", "Выполнено"]}
     metrics = st.columns(3)
     for slot, (label, count) in zip(metrics, counts.items()):
