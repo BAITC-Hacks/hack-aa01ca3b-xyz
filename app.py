@@ -97,7 +97,29 @@ with right:
     expected_speakers = st.number_input("Ожидаемое число участников (подсказка)", min_value=0, max_value=30, value=0, help="0 — определить автоматически")
 
 consent = st.checkbox("Участники уведомлены о записи и расшифровке с помощью ИИ; при демонстрации реальные данные обезличены.")
-start_processing = st.button("Создать протокол", type="primary", disabled=not (upload and consent), width="content")
+action_col, example_col = st.columns([1, 2])
+start_processing = action_col.button("Создать протокол", type="primary", disabled=not (upload and consent), width="content")
+EXAMPLE_RESULT = Path(__file__).parent / "samples" / "synthetic_meeting.result.json"
+if EXAMPLE_RESULT.is_file() and example_col.button("Открыть готовый пример (запись из samples/, обработана заранее)"):
+    import json
+
+    example = json.loads(EXAMPLE_RESULT.read_text(encoding="utf-8"))
+    st.session_state["meeting_result"] = {
+        "title": "Пример: синтетическое совещание (ru / kk / шала)",
+        "analysis_mode": "ollama",
+        "analysis_note": None,
+        "audio": (Path(__file__).parent / "samples" / "synthetic_meeting.mp3").read_bytes(),
+        "audio_format": "audio/mpeg",
+        **{key: example.get(key, default) for key, default in (
+            ("date", "2026-09-23"), ("language", ""), ("duration", 0.0), ("transcript", []), ("summary", ""),
+            ("summary_items", []), ("participants", []), ("actions", []), ("flags", []), ("agent_trace", []), ("model", ""),
+        )},
+    }
+    st.session_state["speaker_names"] = {
+        item["speaker"]: " — ".join(part for part in (item.get("name", ""), item.get("role", "")) if part)
+        for item in example.get("participants", [])
+        if item.get("speaker") and item.get("name")
+    }
 
 if start_processing and upload:
     progress = st.status("Обработка идёт на этом компьютере…", expanded=True)
