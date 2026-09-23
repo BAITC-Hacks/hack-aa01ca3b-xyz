@@ -421,9 +421,18 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str, progr
 
     raw_transcript = _transcript_text(segments)
     overview = step("определяю участников и итоги", 0.1, lambda: _ollama_json(_overview_prompt(raw_transcript, meeting_date), OVERVIEW_SCHEMA))
-    for item in overview.get("participants", []):
-        if isinstance(item, dict) and not _grounded(str(item.get("name", "")), raw_transcript):
-            item["name"] = ""  # a name nobody said in the meeting is a hallucination
+    address_names = _names_from_addresses(segments)
+    participants_raw = [item for item in overview.get("participants", []) if isinstance(item, dict)]
+    known = {str(item.get("speaker", "")) for item in participants_raw}
+    participants_raw += [{"speaker": speaker, "name": "", "role": ""} for speaker in address_names if speaker not in known]
+    taken = {name.lower()[:5] for name in address_names.values()}
+    for item in participants_raw:
+        speaker, name = str(item.get("speaker", "")), str(item.get("name", ""))
+        if speaker in address_names:
+            item["name"] = address_names[speaker]  # names from how people were addressed win over the LLM guess
+        elif not (_grounded(name, raw_transcript) and re.search(PATRONYMIC, name.lower())) or name.lower()[:5] in taken:
+            item["name"] = ""  # not said in the meeting, not a person's name, or already someone else's
+    overview["participants"] = participants_raw
     names = {
         str(item.get("speaker", "")).strip(): str(item.get("name", "")).strip()
         for item in overview.get("participants", [])
@@ -513,6 +522,48 @@ def analyze_meeting(
         return _local_llm_analysis(segments, meeting_date, progress), "ollama", None
     except (OSError, TimeoutError, ValueError, KeyError, urllib.error.URLError, json.JSONDecodeError) as exc:
         return _heuristic_analysis(segments), "fallback", f"Локальный Ollama недоступен; включено упрощённое извлечение. Проверьте поручения вручную. ({exc})"
+
+
+PATRONYMIC = r"(?:(?:ович|евич|овн|евн|ичн|иничн)[а-яё]{0,3}|улы|ұлы|кызы|қызы)"
+_LETTERS = "А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі"
+VOCATIVE = re.compile(rf"([{_LETTERS}]{{3,}})\s+([{_LETTERS}]+{PATRONYMIC})\b", re.IGNORECASE)
+
+
+def _names_from_addresses(segments: list[dict[str, Any]]) -> dict[str, str]:
+    """Deterministic speaker naming: «…Тимур Болатович, что по Павлодару?» names the NEXT speaker.
+
+    A name + patronymic in the second half of a turn (or anywhere in a short turn) votes for the
+    speaker who talks next; each name goes to the speaker with the most votes.
+    """
+    votes: dict[str, dict[str, int]] = {}
+    display: dict[str, str] = {}
+    for current, following in zip(segments, segments[1:]):
+        if current.get("speaker") == following.get("speaker"):
+            continue
+        text = str(current.get("text", ""))
+        matches = list(VOCATIVE.finditer(text))
+        if not matches:
+            continue
+        match = matches[-1]
+        words_before = len(text[: match.start()].split())
+        total_words = len(text.split())
+        if total_words > 10 and words_before < total_words / 2 and "?" not in text:
+            continue
+        key = match.group(1).lower()[:5]
+        patronymic = re.sub(r"(ов|ев)н(ы|е|ой|у)$", r"\1на", match.group(2).lower())
+        patronymic = re.sub(r"(ич)(а|у|ем|е)$", r"\1", patronymic)
+        display.setdefault(key, f"{match.group(1).capitalize()} {patronymic.capitalize()}")
+        speaker_votes = votes.setdefault(str(following.get("speaker")), {})
+        speaker_votes[key] = speaker_votes.get(key, 0) + 1
+    names: dict[str, str] = {}
+    used: set[str] = set()
+    for speaker, counter in sorted(votes.items(), key=lambda item: -max(item[1].values())):
+        for key, _ in sorted(counter.items(), key=lambda item: -item[1]):
+            if key not in used:
+                names[speaker] = display[key]
+                used.add(key)
+                break
+    return names
 
 
 def _grounded(name: str, transcript: str) -> bool:
