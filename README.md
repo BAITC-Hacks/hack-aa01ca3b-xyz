@@ -162,6 +162,8 @@ flowchart LR
 
 На Linux без GPU можно поставить компактную CPU-сборку PyTorch до установки зависимостей: `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
 
+Если Python 3.12 не установлен, окружение можно создать через [uv](https://docs.astral.sh/uv/): `uv venv --python 3.12 --seed .venv`, uv сам скачает нужный Python. Если сервер Ollama не запущен как служба, выполните `ollama serve` в отдельном терминале.
+
 `download_models.py` скачивает веса в кэш Hugging Face и в `models/sherpa/`. Скачиваются только веса, записи и тексты никуда не отправляются. После загрузки сеть не нужна.
 
 ## Запуск
