@@ -432,12 +432,19 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str, progr
     known = {str(item.get("speaker", "")) for item in participants_raw}
     participants_raw += [{"speaker": speaker, "name": "", "role": ""} for speaker in address_names if speaker not in known]
     taken = {name.lower()[:5] for name in address_names.values()}
+    own_words = {
+        str(item.get("speaker", "")): " ".join(str(seg.get("text", "")).lower() for seg in segments if seg.get("speaker") == item.get("speaker"))
+        for item in participants_raw
+    }
     for item in participants_raw:
         speaker, name = str(item.get("speaker", "")), str(item.get("name", ""))
+        key = name.lower()[:5]
         if speaker in address_names:
             item["name"] = address_names[speaker]  # names from how people were addressed win over the LLM guess
-        elif not (_grounded(name, raw_transcript) and re.search(PATRONYMIC, name.lower())) or name.lower()[:5] in taken:
-            item["name"] = ""  # not said in the meeting, not a person's name, or already someone else's
+        elif not (_grounded(name, raw_transcript) and re.search(PATRONYMIC, name.lower())) or key in taken or key in own_words.get(speaker, ""):
+            item["name"] = ""  # not said, not a person's name, someone else's, or the speaker addresses this person
+        if item["name"]:
+            taken.add(item["name"].lower()[:5])
     overview["participants"] = participants_raw
     names = {
         str(item.get("speaker", "")).strip(): str(item.get("name", "")).strip()

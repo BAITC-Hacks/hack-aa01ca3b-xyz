@@ -36,8 +36,10 @@ def _total_ram_gb() -> float:
         return 16.0
 
 
-# auto: ru → base model, kk/mix → kaz-rus; kz-only: everything → kaz-rus (one model in memory, for < 12 GB RAM)
-ROUTING = os.getenv("ASR_ROUTING") or ("auto" if _total_ram_gb() >= 12 else "kz-only")
+# auto: both models in memory, ru → base model, kk/mix → kaz-rus (≥ 12 GB RAM)
+# two-pass: kaz-rus for every line, unload it, then the base model re-recognizes pure Russian lines (< 12 GB RAM)
+# kz-only: everything → kaz-rus (fastest, no punctuation)
+ROUTING = os.getenv("ASR_ROUTING") or ("auto" if _total_ram_gb() >= 12 else "two-pass")
 MAX_CHUNK_S = 20.0
 MIN_CHUNK_S = 0.35
 
@@ -112,10 +114,12 @@ def _base_model():
     return model.to(device()).eval()
 
 
-def release_models() -> None:
-    """Free ASR weights before the local LLM starts (matters on 8 GB laptops)."""
-    _kz_model.cache_clear()
-    _base_model.cache_clear()
+def release_models(kz: bool = True, base: bool = True) -> None:
+    """Free ASR weights before the next model or the local LLM starts (matters on 8 GB laptops)."""
+    if kz:
+        _kz_model.cache_clear()
+    if base:
+        _base_model.cache_clear()
     gc.collect()
     import torch
 
@@ -193,6 +197,8 @@ def transcribe_turns(waveform: np.ndarray, turns: list[tuple[float, float, str]]
     if not use_kz and not use_base:
         raise FileNotFoundError("Не найдены локальные модели распознавания речи. Выполните `python scripts/download_models.py`.")
 
+    if ROUTING == "two-pass" and use_kz:
+        return _two_pass(waveform, prepare_turns(turns), base_available(), progress)
     threshold = float(os.getenv("ASR_RU_THRESHOLD", "0.8"))
     windows = prepare_turns(turns)
     segments: list[dict[str, Any]] = []
@@ -220,4 +226,31 @@ def transcribe_turns(waveform: np.ndarray, turns: list[tuple[float, float, str]]
             })
         if progress:
             progress((index + 1) / len(windows), f"Распознано реплик: {index + 1} из {len(windows)}")
+    return segments
+
+
+def _two_pass(waveform: np.ndarray, windows: list[tuple[float, float, str]], use_base: bool, progress: ProgressFn | None) -> list[dict[str, Any]]:
+    """Low-memory routing: only one Whisper model is loaded at a time."""
+    segments: list[dict[str, Any]] = []
+    share = 0.6 if use_base else 1.0
+    for index, (start, end, speaker) in enumerate(windows):
+        features = _features(waveform[int(start * SAMPLE_RATE): int(end * SAMPLE_RATE)])
+        language = "ru" if _russian_probability(_kz_model(), features) >= 0.5 else "kk"
+        text = _generate(_kz_model(), features, language)
+        if text:
+            segments.append({"start": round(start, 2), "end": round(end, 2), "speaker": speaker, "text": text,
+                             "lang": language_tag(text, language), "asr_model": "whisper-turbo-kaz-rus"})
+        if progress:
+            progress(share * (index + 1) / len(windows), f"Распознано реплик: {index + 1} из {len(windows)}")
+    if not use_base:
+        return segments
+    release_models(kz=True, base=False)
+    russian = [segment for segment in segments if segment["lang"] == "ru"]
+    for index, segment in enumerate(russian):
+        chunk = waveform[int(segment["start"] * SAMPLE_RATE): int(segment["end"] * SAMPLE_RATE)]
+        text = _generate(_base_model(), _features(chunk), "ru")
+        if text and language_tag(text, "ru") == "ru":
+            segment.update(text=text, asr_model="whisper-large-v3-turbo")
+        if progress:
+            progress(0.6 + 0.4 * (index + 1) / len(russian), f"Уточняем русские реплики: {index + 1} из {len(russian)}")
     return segments
