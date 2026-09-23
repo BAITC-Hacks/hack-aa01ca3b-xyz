@@ -167,7 +167,7 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str) -> di
 
 
 _TASK_MARKERS = re.compile(
-    r"\b(поручаю|поручение|нужно|надо|необходимо|должен|должна|подготовить|сделать|обеспечить|тапсырамын|тапсырма|керек|орындау|дайындау)\b",
+    r"\b(поручаю|поручение|нужно|надо|необходимо|долж\w*|пусть|подготов\w*|сдел\w*|обеспеч\w*|организ\w*|найти|найдите|найди|найду|найдёт|собрать|соберите|зафикс\w*|направ\w*|обнов\w*|провести|проведите|проведёт|пришл\w*|выстав\w*|ищите|пропишите|тапсырамын|тапсырма|керек|орындау|дайындау)\b",
     re.IGNORECASE,
 )
 
@@ -194,7 +194,7 @@ def _heuristic_analysis(segments: list[dict[str, Any]]) -> dict[str, Any]:
                 "source_quote": text,
             }
         )
-        return {"summary": summary, "actions": actions}
+    return {"summary": summary, "actions": actions}
 
 
 def analyze_meeting(segments: list[dict[str, Any]], meeting_date: str) -> tuple[dict[str, Any], str, str | None]:
