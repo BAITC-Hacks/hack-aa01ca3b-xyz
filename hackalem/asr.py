@@ -27,6 +27,8 @@ SAMPLE_RATE = 16_000
 BASE_MODEL = os.getenv("ASR_BASE_MODEL", "openai/whisper-large-v3-turbo")
 KZ_BASE_MODEL = os.getenv("ASR_KZ_BASE_MODEL", "abilmansplus/whisper-turbo-ksc2")
 KZ_ADAPTER = os.getenv("ASR_KZ_ADAPTER", "abilmansplus/whisper-turbo-kaz-rus-v1")
+
+
 def _total_ram_gb() -> float:
     try:
         return os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES") / 1024**3
@@ -129,7 +131,7 @@ def _features(chunk: np.ndarray):
 
 
 def _russian_probability(model: Any, features: Any) -> float:
-    """P(ru) among Kazakh and Russian from the multilingual base model's language-ID head."""
+    """P(ru) among Kazakh and Russian from a Whisper model's language-ID head."""
     import torch
 
     lang_to_id = model.generation_config.lang_to_id
@@ -169,7 +171,7 @@ def language_tag(text: str, detected: str) -> str:
 
 
 def prepare_turns(turns: list[tuple[float, float, str]], gap: float = 0.8) -> list[tuple[float, float, str]]:
-    """Merge adjacent turns of one speaker and split long monologues into ≤28 s windows."""
+    """Merge adjacent turns of one speaker and split long monologues into ≤20 s windows."""
     merged: list[tuple[float, float, str]] = []
     for start, end, speaker in sorted(turns):
         if merged and merged[-1][2] == speaker and start - merged[-1][1] <= gap and end - merged[-1][0] <= MAX_CHUNK_S:
@@ -198,10 +200,14 @@ def transcribe_turns(waveform: np.ndarray, turns: list[tuple[float, float, str]]
         chunk = waveform[int(start * SAMPLE_RATE): int(end * SAMPLE_RATE)]
         features = _features(chunk)
         p_russian = _russian_probability(_base_model(), features) if use_base else 0.0
+        text, engine, detected = "", "", ""
         if use_base and (p_russian >= threshold or not use_kz):
             text, engine, detected = _generate(_base_model(), features, "ru"), "whisper-large-v3-turbo", "ru"
-        else:
-            text, engine, detected = _generate(_kz_model(), features, None), "whisper-turbo-kaz-rus", "kk"
+            if use_kz and language_tag(text, "ru") != "ru":
+                text = ""  # Kazakh words in a "Russian" line: re-recognize with the Kazakh model
+        if not text:
+            kz_language = "ru" if _russian_probability(_kz_model(), features) >= 0.5 else "kk"
+            text, engine, detected = _generate(_kz_model(), features, kz_language), "whisper-turbo-kaz-rus", kz_language
         if text:
             segments.append({
                 "start": round(start, 2),

@@ -312,7 +312,7 @@ def _transcript_text(segments: list[dict[str, Any]], names: dict[str, str] | Non
 def _overview_prompt(transcript: str, meeting_date: str) -> str:
     return f"""Ты — секретарь совещания в казахстанской компании. Ниже транскрипт: [#номер мм:сс] SPEAKER_XX (язык): реплика. Речь на русском, казахском или смешанная.
 
-Задача 1. Определи участников: для каждой метки SPEAKER_XX найди имя (обычно имя-отчество) и должность. Подсказки: к человеку обращаются по имени перед его репликой («Жандос Талгатович, по инвестициям что у нас?» → следующий говорящий — Жандос Талгатович); председатель открывает и закрывает совещание и раздаёт поручения. Если имя нельзя установить — name = "".
+Задача 1. Определи участников: для каждой метки SPEAKER_XX найди имя (обычно имя-отчество) и должность. Подсказки: к человеку обращаются по имени перед его репликой («Жандос Талгатович, по инвестициям что у нас?» → следующий говорящий — Жандос Талгатович); председатель открывает и закрывает совещание и раздаёт поручения. Если имя нельзя установить из текста — name = "". Никогда не придумывай имена, которых нет в транскрипте.
 Задача 2. Кратко перескажи итоги совещания на русском (3–5 предложений) в поле summary.
 Задача 3. summary_items — по каждому направлению или докладу: topic (направление и докладчик), indicator (ключевой показатель, цифра), problem (озвученная проблема). Не выдумывай — только то, что сказано.
 
@@ -339,7 +339,7 @@ def _verify_prompt(transcript: str, meeting_date: str, actions: list[dict[str, A
     weekday = WEEKDAYS[date.fromisoformat(meeting_date).weekday()]
     draft = json.dumps({"actions": actions}, ensure_ascii=False, indent=1)
     return f"""Ты — контролёр качества протокола. Проверь черновой список поручений по транскрипту и верни исправленный список.
-Проверь каждое поручение: действительно ли оно было дано; правильный ли ответственный (с учётом делегирования); взят ли последний согласованный срок; правильно ли срок переведён в дату по календарю; нет ли дубликатов из итогов совещания; не пропущено ли поручение из обсуждения. Удали выдуманные поручения. Добавь пропущенные.
+Проверь каждое поручение: действительно ли оно было дано; правильный ли ответственный (с учётом делегирования); взят ли последний согласованный срок; правильно ли срок переведён в дату по календарю; нет ли дубликатов из итогов совещания; не пропущено ли поручение из обсуждения; не слиты ли в одно поручения с разными сроками или из разных реплик. Удали выдуманные поручения. Добавь пропущенные. Не придумывай имена, которых нет в транскрипте.
 
 {ACTION_RULES}
 
@@ -421,6 +421,9 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str, progr
 
     raw_transcript = _transcript_text(segments)
     overview = step("определяю участников и итоги", 0.1, lambda: _ollama_json(_overview_prompt(raw_transcript, meeting_date), OVERVIEW_SCHEMA))
+    for item in overview.get("participants", []):
+        if isinstance(item, dict) and not _grounded(str(item.get("name", "")), raw_transcript):
+            item["name"] = ""  # a name nobody said in the meeting is a hallucination
     names = {
         str(item.get("speaker", "")).strip(): str(item.get("name", "")).strip()
         for item in overview.get("participants", [])
@@ -438,6 +441,11 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str, progr
             actions = verified["actions"]
             flags = [str(flag) for flag in verified.get("flags", [])] or flags
         trace[-1]["result"] = f"после проверки: {len(actions)} поручений"
+    for item in actions:
+        if isinstance(item, dict) and not _grounded(str(item.get("assigned_by", "")), raw_transcript):
+            segment = next((seg for seg in segments if seg.get("id") == item.get("segment_id")), None)
+            speaker = str(segment.get("speaker", "")) if segment else ""
+            item["assigned_by"] = names.get(speaker) or speaker or "председатель"
     cleaned = _clean_actions(actions, segments, meeting_date, names, flags)
     participants = [
         {"speaker": str(item.get("speaker", "")), "name": str(item.get("name", "")), "role": str(item.get("role", ""))}
@@ -505,6 +513,15 @@ def analyze_meeting(
         return _local_llm_analysis(segments, meeting_date, progress), "ollama", None
     except (OSError, TimeoutError, ValueError, KeyError, urllib.error.URLError, json.JSONDecodeError) as exc:
         return _heuristic_analysis(segments), "fallback", f"Локальный Ollama недоступен; включено упрощённое извлечение. Проверьте поручения вручную. ({exc})"
+
+
+def _grounded(name: str, transcript: str) -> bool:
+    """True when at least one word of the name (≥4 letters, stem of 4) occurs in the transcript."""
+    words = [word for word in re.findall(r"\w+", name.lower()) if len(word) >= 4]
+    if not words:
+        return False
+    text = transcript.lower()
+    return any(word[:4] in text for word in words)
 
 
 def _stamp(seconds: float) -> str:
