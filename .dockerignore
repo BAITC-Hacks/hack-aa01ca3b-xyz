@@ -1,10 +1,13 @@
 .git
 .venv
+.venv-mlx
 __pycache__
 *.py[cod]
 .env
 .DS_Store
 models
+data/private_training
 out
+data/registry
 frontend/node_modules
 frontend/dist

@@ -55,9 +55,9 @@ Vite проксирует `/api` на `127.0.0.1:8000`. Откройте адр�
 
 ## Запуск через Docker Compose
 
-> **Что проверено.** Основной путь проверен с нуля на свежем клоне с GitHub: `venv` → `pip install -r requirements.txt` → `scripts/download_models.py` → `scripts/run_demo.py` / Streamlit. Проверены также FastAPI (`/api/health`, `/docs`) и сборка React (`npm install && npm run build`). Сборку Docker-образов на чистой машине проверить не успели, поэтому если с Docker возникнут проблемы, используйте основной путь выше.
+Нужен Docker Desktop с запущенным Docker Engine. На первом запуске Docker скачает базовые образы, около 5,5 ГБ моделей распознавания и модель Ollama `qwen3:4b` (около 2,5 ГБ); для Docker Desktop выделите не менее 8 ГБ памяти. Docker Compose поднимает React-интерфейс, FastAPI и локальный Ollama. Порты доступны только на этом компьютере. Весовые файлы, модели и реестр поручений хранятся в Docker volumes, а приватные данные обучения и локальное MLX-окружение не попадают в build context.
 
-Docker Compose поднимает React-интерфейс, FastAPI и локальный Ollama. Сервисы публикуются только на loopback; модели Whisper/sherpa и Ollama хранятся в Docker volumes. Сначала соберите API image и загрузите локальные модели распознавания, затем запустите стек:
+В корне репозитория выполните:
 
 ```bash
 docker compose build
@@ -65,7 +65,9 @@ docker compose run --rm --no-deps -e HF_HUB_OFFLINE=0 api python scripts/downloa
 docker compose up -d
 ```
 
-При первом запуске Ollama скачает `qwen3:4b`; это может занять несколько минут и требует сети. Затем откройте http://127.0.0.1:8080. API и OpenAPI доступны на http://127.0.0.1:8000, если нужно проверить сервис. Загруженные модели сохраняются в named volumes между перезапусками. Для полной изоляции после загрузки моделей ограничьте исходящий сетевой доступ средствами хоста.
+Сервис `ollama-model-init` при первом старте скачает `qwen3:4b` и завершится; API дождётся, пока модель будет готова. Дождитесь статуса `healthy` у `api` и `ollama`, затем откройте http://127.0.0.1:8080. API и OpenAPI доступны на http://127.0.0.1:8000 и http://127.0.0.1:8000/docs. Состояние проверяется командой `docker compose ps`, логи загрузки модели — `docker compose logs -f ollama-model-init`, логи API — `docker compose logs -f api`. Для остановки выполните `docker compose down`; скачанные модели и реестр останутся в volumes. `docker compose down -v` удаляет эти volumes.
+
+Конфигурацию Compose проверили командой `docker compose config`. Сборку и старт образов нужно подтвердить при запущенном Docker Engine; в среде редактирования он может быть выключен.
 
 
 ## Интерфейс Briefly AI

@@ -1,17 +1,12 @@
 services:
   ollama:
     image: ollama/ollama:latest
+    command: ["serve"]
     environment:
       OLLAMA_HOST: 0.0.0.0:11434
       OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:4b}
     volumes:
       - ollama_data:/root/.ollama
-    entrypoint: ["/bin/sh", "-c"]
-    command: >-
-      ollama serve & server_pid=$$!;
-      until ollama list >/dev/null 2>&1; do sleep 2; done;
-      ollama pull "$${OLLAMA_MODEL:-qwen3:4b}";
-      wait $$server_pid
     healthcheck:
       test: ["CMD-SHELL", "ollama list | grep -q \"$${OLLAMA_MODEL:-qwen3:4b}\""]
       interval: 15s
@@ -19,6 +14,18 @@ services:
       retries: 60
       start_period: 10m
     restart: unless-stopped
+
+  ollama-model-init:
+    image: ollama/ollama:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - 'until ollama list >/dev/null 2>&1; do sleep 2; done; ollama pull ${OLLAMA_MODEL:-qwen3:4b}'
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    depends_on:
+      ollama:
+        condition: service_started
+    restart: "no"
 
   api:
     build:
@@ -34,12 +41,19 @@ services:
       HF_HUB_DISABLE_TELEMETRY: "1"
     volumes:
       - model_data:/app/models
+      - registry_data:/app/data/registry
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
       ollama:
         condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
 
   frontend:
     build:
@@ -48,9 +62,11 @@ services:
     ports:
       - "127.0.0.1:8080:80"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
   model_data:
   ollama_data:
+  registry_data:
