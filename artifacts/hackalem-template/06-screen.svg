@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000"><title>Контроль поручений</title><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Куратор</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">06 / КОНТРОЛЬ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Контроль поручений</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Сроки, статусы и автоматические напоминания</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">06 / 09</text>
+<rect x="40" y="244" width="322" height="115" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#60728F">В работе</text>
+<text x="64" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#172B4D">8</text>
+<rect x="386" y="244" width="322" height="115" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="410" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#60728F">Срок скоро</text>
+<text x="410" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#172B4D">3</text>
+<rect x="732" y="244" width="322" height="115" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="756" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#60728F">Просрочено</text>
+<text x="756" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#172B4D">2</text>
+<rect x="1078" y="244" width="322" height="115" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1102" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#60728F">Выполнено</text>
+<text x="1102" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#172B4D">12</text>
+<text x="40" y="406" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Поиск поручения</text>
+<rect x="40" y="418" width="650" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="54" y="446" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Суть поручения или ответственное лицо</text>
+<g>
+<rect x="714" y="418" width="200" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="730" y="445" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Все ответственные</text>
+</g>
+<g>
+<rect x="930" y="418" width="200" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="946" y="445" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Все сроки</text>
+</g>
+<g>
+<rect x="1146" y="418" width="254" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1162" y="445" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Все статусы</text>
+</g>
+<rect x="40" y="494" width="928" height="357" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="530" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Поручения команды</text>
+<text x="64" y="571" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ПОРУЧЕНИЕ</text>
+<text x="463" y="571" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ОТВЕТСТВЕННЫЙ</text>
+<text x="644" y="571" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СРОК</text>
+<text x="786" y="571" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СТАТУС</text>
+<path d="M64 595h880" stroke="#D8E4F5"/>
+<text x="64" y="634" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">План тестирования</text>
+<text x="463" y="634" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участник 2</text>
+<text x="644" y="634" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">25.09.2026</text>
+<rect x="786" y="614" width="150" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="796" y="633" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">В работе</text>
+<path d="M64 671h880" stroke="#D8E4F5"/>
+<text x="64" y="710" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Проверка сценариев</text>
+<text x="463" y="710" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участник 3</text>
+<text x="644" y="710" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">22.09.2026</text>
+<rect x="786" y="690" width="150" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="796" y="709" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Просрочено</text>
+<path d="M64 747h880" stroke="#D8E4F5"/>
+<text x="64" y="786" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Подготовка материалов</text>
+<text x="463" y="786" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участник 1</text>
+<text x="644" y="786" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">21.09.2026</text>
+<rect x="786" y="766" width="150" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="796" y="785" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Выполнено</text>
+<rect x="992" y="494" width="408" height="357" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1016" y="530" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Напоминания</text>
+<rect x="1016" y="553" width="225" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1026" y="572" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Срок приближается</text>
+<text x="1016" y="618" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">План тестирования — срок через 2 дня.</text>
+<text x="1016" y="643" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Получатель: куратор поручения.</text>
+<path d="M1016 701h360" stroke="#D8E4F5"/>
+<rect x="1016" y="721" width="180" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1026" y="740" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Есть просрочка</text>
+<text x="1016" y="782" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Проверка сценариев — срок истёк.</text>
+<text x="1016" y="807" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Требуется обновить статус.</text>
+<text x="40" y="895" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Расширение: дашборд статусов. Напоминания руководителю / куратору предусмотрены сценарием ТЗ.</text></svg>

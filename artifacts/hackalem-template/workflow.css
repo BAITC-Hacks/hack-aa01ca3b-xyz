@@ -1,0 +1,55 @@
+.wf{max-width:1380px;margin:0 auto;color:#173153;font-family:Segoe UI,Arial,sans-serif}
+.wf *{box-sizing:border-box}
+.wf-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin:0 0 23px}
+.wf-eyebrow{color:#2563eb;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+.wf-intro h1{margin:7px 0 6px;font-size:30px;line-height:1.2;letter-spacing:-.5px}
+.wf-intro p{margin:0;color:#60728f;font-size:14px}
+.wf-local-badge{margin-top:7px;padding:8px 12px;border:1px solid #cbdfef;border-radius:99px;background:#eff8ff;color:#286487;font-size:12px;font-weight:650;white-space:nowrap}
+.wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
+.wf-card{padding:25px;background:#fff;border:1px solid #d8e4f5;border-radius:14px;box-shadow:0 12px 36px rgba(26,68,138,.055)}
+.wf-card-heading{display:flex;align-items:flex-start;gap:12px;margin-bottom:22px}
+.wf-step{display:grid;place-items:center;flex:0 0 31px;height:31px;border-radius:10px;background:#eaf2ff;color:#1c5bd5;font-size:14px;font-weight:800}
+.wf-card-heading h2{margin:0 0 3px;font-size:19px;line-height:1.25;color:#172b4d}
+.wf-card-heading p{margin:0;color:#6b7e9b;font-size:13px}
+.wf-label{display:block;margin:16px 0 8px;color:#34496a;font-size:13px;font-weight:700}
+.wf-input,.wf-textarea,.wf-task input{width:100%;min-height:43px;padding:10px 12px;border:1px solid #cad9ee;border-radius:8px;background:#fff;color:#172b4d;font:14px Segoe UI,Arial,sans-serif;outline:none}
+.wf-input:focus,.wf-textarea:focus,.wf-task input:focus{border-color:#3473e8;box-shadow:0 0 0 3px #dceaff}
+.wf-textarea{display:block;resize:vertical;line-height:1.55}
+.wf-transcript{min-height:170px}.wf-summary{min-height:105px}
+.wf-source-options{display:grid;grid-template-columns:1fr auto 1.25fr;align-items:stretch;gap:13px;margin-top:22px}
+.wf-upload{display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:156px;padding:16px;border:1.5px dashed #a8c4ee;border-radius:11px;background:#f5f9ff;color:#2355a9;text-align:center;cursor:pointer}
+.wf-upload:hover{background:#eef5ff;border-color:#3473e8}
+.wf-upload-icon{font-size:25px;font-weight:700;line-height:1;margin-bottom:6px}
+.wf-upload strong{font-size:13px}.wf-upload small{margin-top:5px;color:#7285a2;font-size:11px;line-height:1.35}
+.wf-or{align-self:center;color:#94a5bb;font-size:12px}
+.wf-mic{padding:15px;border:1px solid #d8e4f5;border-radius:11px}
+.wf-mic-head{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px}
+.wf-mic-head span{color:#215bb7;font-size:16px;font-weight:750;font-variant-numeric:tabular-nums}
+.wf-consent{display:flex;align-items:center;gap:6px;margin:14px 0;font-size:11px;color:#536a8b;cursor:pointer}
+.wf-consent input{width:15px;height:15px;accent-color:#2563eb}
+.wf-record-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.wf-button{display:inline-flex;justify-content:center;align-items:center;gap:6px;min-height:38px;padding:8px 12px;border:1px solid #cbdaf0;border-radius:8px;background:#fff;color:#2355a9;font:650 13px Segoe UI,Arial,sans-serif;cursor:pointer;white-space:nowrap}
+.wf-button:hover:not(:disabled){background:#eef5ff;filter:none}.wf-button:disabled{opacity:.45;cursor:not-allowed}
+.wf-button-primary{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 3px 10px #2563eb28}
+.wf-button-primary:hover:not(:disabled){background:#1d54ce}
+.wf-button-light{background:#eaf2ff;border-color:#d2e3ff;color:#1e56bb}
+.wf-record-buttons .wf-button{min-height:32px;padding:6px 9px;font-size:11px}
+.wf-media-panel{margin-top:17px;padding:14px;border-radius:10px;background:#f6f9ff;border:1px solid #e0eaf8}
+.wf-media-heading{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:9px;font-size:13px;overflow-wrap:anywhere}
+.wf-media-heading strong{min-width:0}.wf-inline-link{color:#1f5ac9;font-size:12px;font-weight:700;white-space:nowrap}
+.wf-media-panel audio,.wf-media-panel video{display:block;width:100%;max-height:260px}
+.wf-status{min-height:19px;margin:14px 0 0;color:#657895;font-size:12px}.wf-error{color:#b42338}
+.wf-honest-note{margin:13px 0 0;padding:11px 13px;border-radius:8px;background:#f5f8ff;color:#647893;font-size:12px;line-height:1.4}
+.wf-tasks{margin-top:20px}.wf-tasks-heading{align-items:center;margin-bottom:14px}.wf-tasks-heading .wf-button{margin-left:auto}
+.wf-task-list{display:grid;gap:9px}
+.wf-task{display:grid;grid-template-columns:minmax(200px,2.2fr) minmax(140px,1fr) minmax(130px,.8fr) 34px;align-items:end;gap:10px;padding:12px;border:1px solid #e1eaf7;border-radius:10px;background:#fbfdff}
+.wf-task label span{display:block;margin-bottom:6px;color:#627696;font-size:11px;font-weight:700}
+.wf-task input{min-height:38px;padding:8px 10px;font-size:13px}
+.wf-remove-task{width:34px;height:38px;padding:0;border:1px solid #e5eaf1;border-radius:7px;background:#fff;color:#9a5361;font-size:22px;cursor:pointer}
+.wf-remove-task:hover{background:#fff0f2;color:#c52743}
+.wf-empty{margin:0;padding:20px;border:1px dashed #d7e4f5;border-radius:9px;color:#7b8da6;font-size:13px;text-align:center}
+.wf-actions{display:flex;justify-content:space-between;align-items:center;gap:18px;margin:20px 0 6px;padding:16px 18px;border:1px solid #d8e4f5;border-radius:12px;background:#fff;box-shadow:0 8px 26px rgba(26,68,138,.045)}
+.wf-actions>div{display:flex;gap:8px;flex-wrap:wrap}.wf-save-status{color:#667c99;font-size:12px}
+@media(max-width:1180px){.wf-grid{grid-template-columns:1fr}.wf-source-options{grid-template-columns:1fr auto 1fr}}
+@media(max-width:760px){.wf-intro{flex-direction:column}.wf-intro h1{font-size:25px}.wf-card{padding:18px}.wf-source-options{grid-template-columns:1fr}.wf-or{text-align:center}.wf-task{grid-template-columns:1fr 1fr}.wf-task label:first-child{grid-column:1/-1}.wf-task .wf-remove-task{justify-self:end}.wf-actions{align-items:stretch;flex-direction:column}.wf-actions>div{display:grid;grid-template-columns:1fr 1fr}.wf-actions>div .wf-button:last-child{grid-column:1/-1}}
+@media(max-width:500px){.wf-tasks-heading{align-items:flex-start;flex-wrap:wrap}.wf-tasks-heading .wf-button{margin-left:43px}.wf-task{grid-template-columns:1fr}.wf-task label:first-child{grid-column:auto}.wf-task .wf-remove-task{justify-self:end}}

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000"><title>Итоговый протокол</title><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">05 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Итоговый протокол</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Планирование пилотного запуска · 23 сентября 2026</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">05 / 09</text>
+<rect x="40" y="244" width="900" height="654" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Протокол № 01 · предварительный просмотр</text>
+<text x="64" y="324" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#172B4D">Планирование пилотного запуска</text>
+<text x="64" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">23 сентября 2026 · 32 минуты · 3 участника</text>
+<path d="M64 384h852" stroke="#D8E4F5"/>
+<text x="64" y="423" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Краткое саммари</text>
+<text x="64" y="461" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Команда обсудила подготовку пилотного запуска. Согласованы план тестирования и проверка</text>
+<text x="64" y="486" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">основных сценариев. Список рисков требует уточнения срока и ответственного.</text>
+<text x="64" y="568" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Поручения</text>
+<path d="M64 590h852" stroke="#D8E4F5"/>
+<text x="64" y="620" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ЧТО СДЕЛАТЬ</text>
+<text x="510" y="620" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ОТВЕТСТВЕННЫЙ</text>
+<text x="725" y="620" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СРОК</text>
+<text x="64" y="660" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Подготовить план тестирования</text>
+<text x="510" y="660" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Айдана</text>
+<text x="725" y="660" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">25.09.2026</text>
+<path d="M64 680h852" stroke="#D8E4F5"/>
+<text x="64" y="716" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Подготовить список рисков</text>
+<text x="510" y="716" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Уточнить</text>
+<text x="725" y="716" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Уточнить</text>
+<path d="M64 744h852" stroke="#D8E4F5"/>
+<text x="64" y="791" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Приложение: полный транскрипт с таймкодами</text>
+<g data-screen="8" role="button" tabindex="0">
+<rect x="64" y="818" width="390" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="80" y="845" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Открыть полный транскрипт</text>
+</g>
+<rect x="964" y="244" width="436" height="355" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="988" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Экспорт протокола</text>
+<text x="988" y="320" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Состав документа</text>
+<rect x="988" y="345" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="991" y="359" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="1017" y="359" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Краткое саммари</text>
+<rect x="988" y="385" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="991" y="399" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="1017" y="399" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Список поручений</text>
+<rect x="988" y="425" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="991" y="439" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="1017" y="439" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Полный транскрипт</text>
+<g>
+<rect x="988" y="505" width="176" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="1004" y="532" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Скачать PDF</text>
+</g>
+<g>
+<rect x="1176" y="505" width="200" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1192" y="532" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Скачать DOCX</text>
+</g>
+<text x="988" y="565" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">В макете скачивание не подключено.</text>
+<rect x="964" y="623" width="436" height="275" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="988" y="659" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Следующие действия</text>
+<text x="988" y="697" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Проверьте открытые вопросы перед передачей</text>
+<text x="988" y="722" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">протокола.</text>
+<g data-screen="3" role="button" tabindex="0">
+<rect x="988" y="763" width="386" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1004" y="790" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Вернуться к проверке</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="988" y="821" width="386" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1004" y="848" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Открыть контроль поручений</text>
+</g></svg>

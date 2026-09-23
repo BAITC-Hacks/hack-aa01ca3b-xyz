@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000"><title>Подключение ИИ-ассистента</title><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">07 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Подключение ИИ-ассистента</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Ассистент присоединяется к онлайн-встрече как участник</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">07 / 09</text>
+<rect x="40" y="244" width="860" height="656" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Подключение к онлайн-встрече</text>
+<text x="64" y="320" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Платформа совещания</text>
+<g>
+<rect x="64" y="342" width="220" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="80" y="369" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Microsoft Teams</text>
+</g>
+<g>
+<rect x="300" y="342" width="220" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="316" y="369" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Zoom</text>
+</g>
+<g>
+<rect x="536" y="342" width="220" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="552" y="369" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Google Meet</text>
+</g>
+<text x="64" y="434" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Ссылка на встречу</text>
+<rect x="64" y="446" width="812" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="78" y="474" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Вставьте ссылку Teams, Zoom или Google Meet</text>
+<text x="64" y="532" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Имя участника-ассистента</text>
+<rect x="64" y="544" width="812" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="78" y="572" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">brieflyAI · запись и протокол</text>
+<text x="64" y="638" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Ассистент входит во встречу отдельным участником. Организатор допускает его из</text>
+<text x="64" y="664" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">зала ожидания.</text>
+<rect x="64" y="724" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="67" y="738" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="93" y="738" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участники уведомлены о записи и ИИ-транскрибации</text>
+<g data-screen="2" role="button" tabindex="0">
+<rect x="64" y="808" width="290" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="80" y="835" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Подключить ассистента</text>
+</g>
+<g data-screen="1" role="button" tabindex="0">
+<rect x="370" y="808" width="204" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="386" y="835" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Другой источник</text>
+</g>
+<rect x="924" y="244" width="476" height="336" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="948" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Состояния подключения</text>
+<text x="948" y="326" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">01  Подключение по ссылке</text>
+<text x="948" y="382" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">02  Ожидание допуска организатором</text>
+<text x="948" y="438" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">03  Ассистент вошёл во встречу</text>
+<text x="948" y="494" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">04  Запись и транскрибация</text>
+<rect x="924" y="604" width="476" height="296" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="948" y="640" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Если подключиться не удалось</text>
+<text x="948" y="680" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Проверьте ссылку и допуск ассистента. Можно</text>
+<text x="948" y="705" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">повторить подключение или загрузить запись</text>
+<text x="948" y="730" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">совещания.</text>
+<g>
+<rect x="948" y="786" width="205" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="964" y="813" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Повторить</text>
+</g>
+<g data-screen="1" role="button" tabindex="0">
+<rect x="1168" y="786" width="208" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1184" y="813" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Загрузить запись</text>
+</g>
+<text x="948" y="868" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Состояния показаны для макета.</text></svg>

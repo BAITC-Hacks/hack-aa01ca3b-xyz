@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000"><title>Полный транскрипт</title><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">09 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Полный транскрипт</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Исходные реплики, таймкоды и привязка к участникам</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">09 / 09</text>
+<rect x="40" y="244" width="898" height="652" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Текстовый протокол · исходная речь</text>
+<text x="64" y="318" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="500" fill="#172B4D">▶  03:48 / 32:10   ━━━━━━━━━━━━━━━━━</text>
+<text x="64" y="386" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">00:12 · Данияр · русский</text>
+<text x="64" y="423" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Коллеги, сегодня обсуждаем подготовку пилотного запуска.</text>
+<path d="M64 478h850" stroke="#D8E4F5"/>
+<text x="64" y="503" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">03:48 · Айдана · казахский</text>
+<text x="64" y="540" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Мен тест жоспарын жұмаға дейін дайындаймын.</text>
+<path d="M64 595h850" stroke="#D8E4F5"/>
+<text x="64" y="620" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">07:25 · Руслан · смешанная речь</text>
+<text x="64" y="657" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Сначала проверим сценарии, потом нәтижесін командаға жібереміз.</text>
+<path d="M64 712h850" stroke="#D8E4F5"/>
+<text x="64" y="737" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">12:31 · Не определён · русский</text>
+<text x="64" y="774" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Подготовить список рисков. Срок уточним после встречи.</text>
+<rect x="962" y="244" width="438" height="326" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="986" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Говорящие → участники</text>
+<text x="986" y="321" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Говорящий 1 → Данияр</text>
+<text x="986" y="363" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Говорящий 2 → Айдана</text>
+<text x="986" y="405" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Говорящий 3 → Руслан</text>
+<text x="986" y="459" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Имена подтверждает секретарь. Неопределённые</text>
+<text x="986" y="483" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">реплики остаются на проверку.</text>
+<rect x="962" y="594" width="438" height="302" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="986" y="630" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Поручение из реплики 03:48</text>
+<text x="986" y="669" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Суть: подготовить план тестирования.</text>
+<text x="986" y="695" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Ответственный: Айдана. Срок: 25 сентября</text>
+<text x="986" y="721" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">2026.</text>
+<g data-screen="3" role="button" tabindex="0">
+<rect x="986" y="769" width="390" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1002" y="796" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Проверить поручение</text>
+</g>
+<g data-screen="4" role="button" tabindex="0">
+<rect x="986" y="827" width="390" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="1002" y="854" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Саммари и экспорт PDF / DOCX</text>
+</g></svg>

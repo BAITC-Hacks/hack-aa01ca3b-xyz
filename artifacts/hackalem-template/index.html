@@ -1,0 +1,583 @@
+<!doctype html><html lang="ru"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>brieflyAI — функциональный шаблон</title><link rel="stylesheet" href="workflow.css"><style>*{box-sizing:border-box}body{margin:0;background:#e4e6e8;color:#202124;font:15px Arial,sans-serif}header{padding:20px 28px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:24px;flex-wrap:wrap}header strong{font-size:20px}header span{color:#697078}nav{display:flex;gap:8px;flex-wrap:wrap;padding:16px 28px}button{padding:12px 16px;border:1px solid #c7cbd0;background:#fff;border-radius:7px;color:#292c30;cursor:pointer}button.active{background:#292c30;color:#fff}main{padding:0 28px 28px}article{max-width:1440px;margin:auto;box-shadow:0 4px 24px #00000012}svg{display:block;width:100%;height:auto}[data-screen]{cursor:pointer}aside{max-width:1440px;margin:24px auto;background:#fff;border-radius:8px;padding:24px;line-height:1.65}a{color:#202124}section[hidden]{display:none}.picker-left{gap:10px}.picker-left>div{min-width:150px}.step-picker select{min-width:270px;width:270px}.picker-actions{gap:8px}.picker-actions button{min-width:94px;padding:10px 12px}.site-footer{max-width:1440px;margin:0 auto 28px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:#697078;font-size:13px;border-top:1px solid #d6dae0}.site-footer>div{display:flex;gap:18px;flex-wrap:wrap}.site-footer a{font-weight:600;color:#36404a;text-decoration:none}.site-footer a:hover{text-decoration:underline}@media(max-width:720px){.picker-left>div{min-width:100%}.step-picker select{width:100%;min-width:0}.site-footer{margin:0 16px 24px;align-items:flex-start;flex-direction:column}}.recording-page{max-width:1440px;margin:0 auto}.recording-heading{padding:18px 4px 26px}.recording-eyebrow{color:#2563eb;font-size:11px;font-weight:800;letter-spacing:1.2px}.recording-heading h1{margin:8px 0 7px;color:#172b4d;font-size:32px;line-height:1.2}.recording-heading p{margin:0;color:#60728f}.recording-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(290px,.85fr);gap:22px}.recording-card{padding:30px;background:#fff;border:1px solid #d8e4f5;border-radius:14px;box-shadow:0 14px 35px rgba(26,68,138,.06)}.recording-card-head{display:flex;align-items:center;gap:17px}.recording-icon{display:grid;place-items:center;width:48px;height:48px;flex:0 0 48px;background:#eaf2ff;border-radius:14px;color:#2563eb;font-size:22px}.recording-card h2{margin:0 0 3px;color:#172b4d;font-size:19px}.recording-card-head p{margin:0;color:#60728f;font-size:14px}.recording-timer{margin-left:auto;color:#17366b;font-size:26px;font-weight:750;font-variant-numeric:tabular-nums}.recording-consent{display:flex;gap:11px;align-items:flex-start;margin:34px 0 23px;padding:17px;background:#f5f8ff;border-radius:9px;color:#354c6c;font-size:14px}.recording-consent input{width:18px;height:18px;accent-color:#2563eb;flex:0 0 18px}.recording-actions{display:flex;gap:10px;flex-wrap:wrap}.recording-actions button{min-height:46px;border-color:#cbdaf0;color:#2456a4;font-weight:650}.recording-actions .record-primary{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 3px 10px rgba(37,99,235,.18)}.recording-actions button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}.recording-result{margin-top:30px;padding-top:24px;border-top:1px solid #dce7f8}.recording-result strong{display:block;margin-bottom:12px}.recording-result audio{display:block;width:100%;margin-bottom:15px}.record-download{display:inline-flex;padding:10px 16px;border-radius:8px;background:#eaf2ff;color:#1f5ac9;font-weight:700;text-decoration:none}.recording-side ol{margin:18px 0 25px;padding-left:22px;color:#425674;line-height:1.6}.recording-side li{padding:0 0 12px 4px}.recording-note{padding:18px;background:#f5f8ff;border-radius:9px;color:#354c6c}.recording-note strong{color:#1d4d9f}.recording-note p{margin:8px 0 0;font-size:14px}.recording-example{margin-top:20px;border:0;padding:0;background:transparent;color:#1f5ac9;font-weight:700;text-align:left}@media(max-width:900px){.recording-grid{grid-template-columns:1fr}}@media(max-width:620px){.recording-card{padding:20px}.recording-heading h1{font-size:27px}.recording-timer{font-size:21px}.recording-actions button{flex:1}}.site-header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:16px 28px;background:#fff;border-bottom:1px solid #d6dae0;flex-wrap:wrap}.site-brand,.site-meta{display:flex;align-items:center;gap:16px}.site-brand strong{font-size:20px}.site-brand span,.workspace-label{font-size:13px;color:#697078}.language-chip{display:inline-flex;align-items:center;min-height:30px;padding:4px 11px;border-radius:7px;background:#f1f3f5;color:#36404a;font-size:13px;font-weight:600;white-space:nowrap}.user-role{font-size:14px;white-space:nowrap}@media(max-width:620px){.site-header{align-items:flex-start}.site-brand,.site-meta{width:100%;justify-content:space-between}.workspace-label{display:none}}body{background:linear-gradient(155deg,#eaf2ff 0%,#f5f8ff 56%,#edf4ff 100%);color:#172b4d;font-family:Segoe UI,Arial,sans-serif}.site-header{background:linear-gradient(110deg,#15336c 0%,#1d4d9f 100%);border-bottom:0;color:#fff;box-shadow:0 5px 18px rgba(19,57,120,.16)}.site-brand{gap:12px}.site-brand strong{color:#fff;font-size:20px}.site-brand span,.workspace-label{color:#d3e3ff}.site-meta .language-chip{background:rgba(255,255,255,.17);color:#fff;border:1px solid rgba(255,255,255,.22)}.user-role{color:#fff}.logo-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#fff;color:#2456a4;font-size:12px;font-weight:800;letter-spacing:.3px}.step-picker{background:#fff;border-bottom:1px solid #dae6f7;box-shadow:0 5px 18px rgba(28,73,145,.05)}.picker-left strong{color:#17366b}.step-picker select{border-color:#cbdaf0;background-color:#f9fbff;color:#17366b}.picker-actions .next-screen{background:#2563eb;border-color:#2563eb;box-shadow:0 3px 8px rgba(37,99,235,.18)}.picker-actions button:not(.next-screen){color:#2456a4;border-color:#cbdaf0;background:#f8fbff}.picker-actions button:hover:not(:disabled){filter:brightness(.96)}main{padding-top:28px}article{border:1px solid #d7e4f8;border-radius:14px;overflow:hidden;box-shadow:0 18px 45px rgba(26,68,138,.09)}.site-footer{color:#60728f;border-top-color:#d7e4f8}.site-footer a{color:#1f5ac9}.site-header{position:sticky;top:0;z-index:30;min-height:68px}.sidebar{position:fixed;top:68px;left:0;bottom:0;width:250px;z-index:20;display:flex;flex-direction:column;gap:0;padding:28px 14px 16px;background:#fff;border-right:1px solid #dce7f8;box-shadow:7px 0 24px rgba(25,65,134,.04);overflow-y:auto}.sidebar-heading{padding:0 14px 25px}.sidebar-overline{display:block;color:#4971bb;font-size:11px;font-weight:800;letter-spacing:1.5px;margin-bottom:5px}.sidebar-heading strong{color:#18345e;font-size:17px}.sidebar-group{margin-bottom:18px}.sidebar-group-title{color:#8998ad;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.1px;padding:0 14px 8px}.sidebar-link{position:relative;display:flex;align-items:center;justify-content:flex-start;gap:12px;width:100%;min-height:42px;padding:9px 12px;background:transparent;border:1px solid transparent;border-radius:10px;color:#425674;font-size:14px;font-weight:550;text-align:left;transition:background .15s,color .15s,transform .15s}.sidebar-link:hover{background:#f1f6ff;color:#1d54b5;filter:none}.sidebar-link[aria-current=page]{background:#eaf2ff;border-color:#d4e4ff;color:#1752b3;font-weight:700;box-shadow:inset 3px 0 #2563eb}.nav-index{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:8px;background:#f3f6fb;color:#8090a8;font-size:11px;font-weight:700}.sidebar-link[aria-current=page] .nav-index{background:#2563eb;color:#fff}.sidebar-bottom{display:flex;align-items:center;gap:8px;margin-top:auto;padding:14px;color:#8393a9;font-size:12px;border-top:1px solid #e7edf7}.sidebar-dot{width:7px;height:7px;border-radius:50%;background:#4ba987}.sidebar-toggle{display:none;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid rgba(255,255,255,.28);border-radius:8px;background:rgba(255,255,255,.13);color:#fff;font-size:20px;line-height:1}main{margin-left:250px;max-width:none;padding:30px clamp(22px,3vw,52px)}.site-footer{margin-left:calc(250px + 3vw);margin-right:3vw;max-width:none}@media(max-width:950px){.sidebar{transform:translateX(-105%);transition:transform .2s ease;box-shadow:14px 0 40px rgba(24,55,106,.2)}.sidebar.open{transform:translateX(0)}.sidebar-toggle{display:inline-flex}main{margin-left:0}.site-footer{margin-left:22px;margin-right:22px}}@media(max-width:620px){.site-brand span:not(.logo-mark){display:none}.site-header{min-height:68px}}.sidebar{flex-wrap:nowrap}.sidebar-details{width:100%;margin:4px 0 16px}.sidebar-details summary{padding:11px 14px;border-radius:8px;color:#60728f;font-size:11px;font-weight:750;letter-spacing:1px;text-transform:uppercase;cursor:pointer}.sidebar-details summary:hover{background:#f1f6ff;color:#1d54b5}.sidebar-details .sidebar-group{margin:8px 0 0}.sidebar-group{flex:none;width:100%}.sidebar-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}.sidebar-close{width:31px;height:31px;min-width:31px;display:grid;place-items:center;padding:0;margin-top:-4px;border:1px solid #d9e5f5;border-radius:8px;background:#f5f8ff;color:#526b90;font-size:22px;line-height:1}.sidebar-close:hover{background:#eaf2ff;color:#1752b3}.sidebar-toggle{display:inline-flex;margin-right:2px}body.sidebar-collapsed .sidebar{transform:translateX(-105%)}body.sidebar-collapsed main{margin-left:0}body.sidebar-collapsed .site-footer{margin-left:3vw}@media(max-width:950px){body.sidebar-collapsed .sidebar.open{transform:translateX(0)}}</style><header class="site-header"><div class="site-brand"><button class="sidebar-toggle" id="menuToggle" type="button" aria-label="Открыть меню" aria-expanded="true" aria-controls="sidebar">☰</button><span class="logo-mark" aria-hidden="true">b</span><strong>brieflyAI</strong><span>Рабочее пространство</span></div><div class="site-meta"><span class="language-chip" aria-label="Языки интерфейса">RU / ҚАЗ</span><strong class="user-role">Секретарь</strong></div></header><nav class="sidebar" id="sidebar" aria-label="Разделы сайта"><div class="sidebar-heading"><div><span class="sidebar-overline">НАВИГАЦИЯ</span><strong>brieflyAI</strong></div><button type="button" class="sidebar-close" id="sidebarClose" aria-label="Закрыть сайдбар" title="Закрыть сайдбар">×</button></div><div class="sidebar-group"><div class="sidebar-group-title">Рабочий процесс</div><button type="button" class="sidebar-link" data-screen="0" aria-current="false"><span class="nav-index">01</span><span>Рабочий стол</span></button><button type="button" class="sidebar-link" data-screen="2" aria-current="false"><span class="nav-index">03</span><span>Запись с микрофона</span></button></div><details class="sidebar-details" id="exampleScreens"><summary>Примеры макета</summary><div class="sidebar-group"><button type="button" class="sidebar-link" data-screen="1" aria-current="false"><span class="nav-index">02</span><span>Новое совещание</span></button><button type="button" class="sidebar-link" data-screen="6" aria-current="false"><span class="nav-index">07</span><span>Подключение ИИ</span></button><button type="button" class="sidebar-link" data-screen="7" aria-current="false"><span class="nav-index">08</span><span>Обработка</span></button><button type="button" class="sidebar-link" data-screen="8" aria-current="false"><span class="nav-index">09</span><span>Транскрипт</span></button><button type="button" class="sidebar-link" data-screen="3" aria-current="false"><span class="nav-index">04</span><span>Проверка ИИ</span></button><button type="button" class="sidebar-link" data-screen="4" aria-current="false"><span class="nav-index">05</span><span>Протокол</span></button><button type="button" class="sidebar-link" data-screen="5" aria-current="false"><span class="nav-index">06</span><span>Поручения</span></button></div></details><div class="sidebar-bottom"><span class="sidebar-dot"></span> Данные демо — пример</div></nav><main><section id="screen0"><article><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 80 1440 860"><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">01 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Совещания</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Записи, расшифровки и протоколы команды</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">01 / 09</text>
+<text x="40" y="258" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Поиск</text>
+<rect x="40" y="270" width="570" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="54" y="298" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Название совещания или участник</text>
+<g>
+<rect x="632" y="270" width="164" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="648" y="297" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Все статусы</text>
+</g>
+<g data-screen="1" role="button" tabindex="0">
+<rect x="1135" y="270" width="265" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="1151" y="297" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">+ Новое совещание</text>
+</g>
+<rect x="40" y="346" width="1360" height="343" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="382" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Последние совещания</text>
+<text x="64" y="419" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СОВЕЩАНИЕ</text>
+<text x="628" y="419" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ДАТА / ЯЗЫК</text>
+<text x="884" y="419" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СОСТОЯНИЕ</text>
+<text x="1160" y="419" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ДЕЙСТВИЕ</text>
+<path d="M64 440h1312" stroke="#D8E4F5"/>
+<text x="64" y="469" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#172B4D">Планирование пилотного запуска</text>
+<text x="64" y="494" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">3 участника · 32 минуты</text>
+<text x="628" y="477" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">23.09.2026 · RU + KZ</text>
+<rect x="884" y="460" width="230" height="28" rx="6" fill="#FFF3D9" stroke="#FFF3D9"/>
+<text x="894" y="479" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#885B0C">Требует проверки</text>
+<g data-screen="3" role="button" tabindex="0">
+<rect x="1160" y="454" width="208" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1176" y="481" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Проверить поручения</text>
+</g>
+<path d="M64 518h1312" stroke="#D8E4F5"/>
+<text x="64" y="547" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#172B4D">Еженедельная встреча команды</text>
+<text x="64" y="572" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">4 участника · 45 минут</text>
+<text x="628" y="555" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">21.09.2026 · Қазақша</text>
+<rect x="884" y="538" width="230" height="28" rx="6" fill="#E4F7EE" stroke="#E4F7EE"/>
+<text x="894" y="557" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#206B4B">Протокол готов</text>
+<g data-screen="4" role="button" tabindex="0">
+<rect x="1160" y="532" width="208" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1176" y="559" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Открыть протокол</text>
+</g>
+<path d="M64 596h1312" stroke="#D8E4F5"/>
+<text x="64" y="625" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#172B4D">Обсуждение бюджета</text>
+<text x="64" y="650" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">2 участника · 18 минут</text>
+<text x="628" y="633" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">20.09.2026 · Русский</text>
+<rect x="884" y="616" width="230" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="894" y="635" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Обработка записи</text>
+<g data-screen="7" role="button" tabindex="0">
+<rect x="1160" y="610" width="208" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1176" y="637" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Посмотреть этапы</text>
+</g>
+<text x="40" y="733" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">КОГДА НУЖНО ДЕЙСТВИЕ</text>
+<rect x="40" y="756" width="666" height="154" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="792" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Пока нет совещаний</text>
+<text x="64" y="822" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Добавьте первую запись — здесь появятся её расшифровка, поручения и</text>
+<text x="64" y="846" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">протокол.</text>
+<g data-screen="1" role="button" tabindex="0">
+<rect x="64" y="855" width="182" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="80" y="882" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Создать совещание</text>
+</g>
+<rect x="722" y="756" width="678" height="154" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="746" y="792" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Не удалось обработать запись</text>
+<text x="746" y="822" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Файл сохранён. Можно повторить обработку.</text>
+<g data-screen="7" role="button" tabindex="0">
+<rect x="746" y="855" width="215" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="762" y="882" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Повторить обработку</text>
+</g></svg></article></section><section id="screen1" hidden><article><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 80 1440 860"><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">02 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Новое совещание</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Выберите источник записи и подготовьте участников</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">02 / 09</text>
+<rect x="40" y="244" width="864" height="650" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Параметры совещания</text>
+<text x="64" y="319" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Название</text>
+<rect x="64" y="331" width="816" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="78" y="359" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Планирование пилотного запуска</text>
+<text x="64" y="410" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Источник записи</text>
+<g>
+<rect x="64" y="430" width="228" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="80" y="457" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Загрузить файл</text>
+</g>
+<g data-screen="2" role="button" tabindex="0">
+<rect x="304" y="430" width="228" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="320" y="457" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Микрофон / live</text>
+</g>
+<g data-screen="6" role="button" tabindex="0">
+<rect x="544" y="430" width="312" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="560" y="457" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Teams / Zoom / Google Meet</text>
+</g>
+<rect x="64" y="494" width="816" height="130" rx="10" fill="#F5F8FF" stroke="#D8E4F5"/>
+<text x="88" y="532" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="600" fill="#172B4D">Перетащите аудио или видео</text>
+<text x="88" y="561" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Запись будет обработана внутри контура организации.</text>
+<g>
+<rect x="657" y="557" width="195" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="673" y="584" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Выбрать файл</text>
+</g>
+<text x="64" y="666" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Язык совещания</text>
+<rect x="64" y="686" width="145" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="705" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Русский</text>
+<rect x="221" y="686" width="145" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="231" y="705" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Қазақша</text>
+<rect x="378" y="686" width="302" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="388" y="705" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Шала-казахский / смешанная</text>
+<text x="64" y="755" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Распознавание речи, разделение говорящих, поручения и саммари.</text>
+<g data-screen="7" role="button" tabindex="0">
+<rect x="64" y="819" width="240" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="80" y="846" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Начать обработку</text>
+</g>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="320" y="819" width="130" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="336" y="846" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Отмена</text>
+</g>
+<rect x="928" y="244" width="472" height="215" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="952" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Уведомление участников</text>
+<text x="952" y="315" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Перед записью сообщите: «Ведётся запись и</text>
+<text x="952" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">ИИ-транскрибация совещания».</text>
+<rect x="952" y="411" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="955" y="425" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="981" y="425" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участники уведомлены</text>
+<rect x="928" y="479" width="472" height="236" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="952" y="515" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Подключение по ссылке</text>
+<text x="952" y="550" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Ссылка на встречу</text>
+<rect x="952" y="562" width="424" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="966" y="590" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Вставьте ссылку на совещание</text>
+<text x="952" y="643" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Ассистент подключается как участник. Запись</text>
+<text x="952" y="667" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">начинается после уведомления.</text>
+<rect x="928" y="735" width="472" height="159" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="952" y="771" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Проверка микрофона</text>
+<text x="952" y="802" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Устройство: микрофон компьютера</text>
+<g data-screen="2" role="button" tabindex="0">
+<rect x="952" y="828" width="214" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="968" y="855" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Проверить и записать</text>
+</g></svg></article></section><section id="screen2" hidden><div class="recording-page"><div class="recording-heading"><span class="recording-eyebrow">СОВЕЩАНИЕ / ЗАПИСЬ</span><h1>Запись совещания</h1><p>Запишите аудио встречи с микрофона. Файл останется на этом устройстве.</p></div><div class="recording-grid"><div class="recording-card"><div class="recording-card-head"><span class="recording-icon" aria-hidden="true">●</span><div><h2>Микрофон</h2><p id="recordStatus" role="status" aria-live="polite">Микрофон не включён</p></div><div class="recording-timer" id="recordTimer" aria-label="Длительность записи">00:00</div></div><label class="recording-consent"><input id="recordConsent" type="checkbox"><span>Я уведомил участников о записи и транскрибации</span></label><div class="recording-actions"><button type="button" id="recordStart" class="record-primary" disabled>Начать запись</button><button type="button" id="recordPause" disabled>Пауза</button><button type="button" id="recordStop" disabled>Завершить запись</button></div><div id="recordResult" class="recording-result" hidden><strong>Запись готова</strong><audio id="recordPlayback" controls preload="metadata"></audio><a id="recordDownload" class="record-download" download>Скачать аудиофайл</a></div></div><aside class="recording-card recording-side"><h2>Как это работает</h2><ol><li>Сообщите участникам о записи.</li><li>Нажмите «Начать запись» и разрешите доступ к микрофону.</li><li>После встречи завершите запись и скачайте файл.</li></ol><div class="recording-note"><strong>Расшифровка</strong><p>Для распознавания русского, казахского и смешанной речи нужно подключить локальную модель в backend.</p></div><button type="button" class="recording-example" data-screen="7">Посмотреть пример обработки →</button></aside></div></div></section><section id="screen3" hidden><article><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 80 1440 860"><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">04 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Проверка результатов ИИ</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Подтвердите говорящих, ответственных и сроки</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">04 / 09</text>
+<rect x="40" y="244" width="1360" height="62" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="282" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#172B4D">Обработка завершена · 3 говорящих · 2 поручения требуют уточнения</text>
+<g data-screen="4" role="button" tabindex="0">
+<rect x="1105" y="254" width="270" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="1121" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Подтвердить и продолжить</text>
+</g>
+<rect x="40" y="328" width="816" height="560" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="364" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Транскрипт и источник поручения</text>
+<text x="64" y="403" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="500" fill="#172B4D">▶  03:48 / 32:10   ━━━━━━━━━━━━━━━━━</text>
+<path d="M64 427h768" stroke="#D8E4F5"/>
+<text x="64" y="464" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">Говорящий 2 → Айдана (подтверждено)</text>
+<text x="64" y="505" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="400" fill="#172B4D">Мен тест жоспарын жұмаға дейін дайындаймын.</text>
+<rect x="64" y="558" width="768" height="127" rx="10" fill="#F5F8FF" stroke="#D8E4F5"/>
+<text x="84" y="589" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">ИИ выделил поручение</text>
+<text x="84" y="625" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" fill="#172B4D">Подготовить план тестирования к пятнице.</text>
+<text x="64" y="735" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">Говорящий не определён · 12:31</text>
+<text x="64" y="775" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Подготовить список рисков. Срок уточним после встречи.</text>
+<g>
+<rect x="64" y="824" width="222" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="80" y="851" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Исправить транскрипт</text>
+</g>
+<rect x="880" y="328" width="520" height="560" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="904" y="364" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Проверка поручения 1 из 2</text>
+<text x="904" y="416" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Что сделать</text>
+<rect x="904" y="428" width="472" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="918" y="456" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Подготовить план тестирования</text>
+<text x="904" y="512" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Ответственный</text>
+<rect x="904" y="524" width="472" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="918" y="552" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Айдана · говорящий 2</text>
+<text x="904" y="608" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Срок исполнения</text>
+<rect x="904" y="620" width="472" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="918" y="648" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">25.09.2026 — подтвердить дату</text>
+<text x="904" y="701" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="500" fill="#60728F">Источник: реплика 03:48</text>
+<g>
+<rect x="904" y="728" width="220" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="920" y="755" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Сохранить уточнение</text>
+</g>
+<path d="M904 792h472" stroke="#D8E4F5"/>
+<text x="904" y="824" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Поручение 2: список рисков</text>
+<text x="904" y="857" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Не определены ответственный и срок</text>
+<text x="40" y="924" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Перед подтверждением: заполните обязательные поля или явно отметьте «требует уточнения».</text></svg></article></section><section id="screen4" hidden><article><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 80 1440 860"><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">05 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Итоговый протокол</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Планирование пилотного запуска · 23 сентября 2026</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">05 / 09</text>
+<rect x="40" y="244" width="900" height="654" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Протокол № 01 · предварительный просмотр</text>
+<text x="64" y="324" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#172B4D">Планирование пилотного запуска</text>
+<text x="64" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">23 сентября 2026 · 32 минуты · 3 участника</text>
+<path d="M64 384h852" stroke="#D8E4F5"/>
+<text x="64" y="423" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Краткое саммари</text>
+<text x="64" y="461" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Команда обсудила подготовку пилотного запуска. Согласованы план тестирования и проверка</text>
+<text x="64" y="486" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">основных сценариев. Список рисков требует уточнения срока и ответственного.</text>
+<text x="64" y="568" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Поручения</text>
+<path d="M64 590h852" stroke="#D8E4F5"/>
+<text x="64" y="620" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ЧТО СДЕЛАТЬ</text>
+<text x="510" y="620" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ОТВЕТСТВЕННЫЙ</text>
+<text x="725" y="620" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СРОК</text>
+<text x="64" y="660" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Подготовить план тестирования</text>
+<text x="510" y="660" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Айдана</text>
+<text x="725" y="660" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">25.09.2026</text>
+<path d="M64 680h852" stroke="#D8E4F5"/>
+<text x="64" y="716" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Подготовить список рисков</text>
+<text x="510" y="716" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Уточнить</text>
+<text x="725" y="716" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Уточнить</text>
+<path d="M64 744h852" stroke="#D8E4F5"/>
+<text x="64" y="791" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Приложение: полный транскрипт с таймкодами</text>
+<g data-screen="8" role="button" tabindex="0">
+<rect x="64" y="818" width="390" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="80" y="845" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Открыть полный транскрипт</text>
+</g>
+<rect x="964" y="244" width="436" height="355" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="988" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Экспорт протокола</text>
+<text x="988" y="320" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Состав документа</text>
+<rect x="988" y="345" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="991" y="359" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="1017" y="359" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Краткое саммари</text>
+<rect x="988" y="385" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="991" y="399" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="1017" y="399" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Список поручений</text>
+<rect x="988" y="425" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="991" y="439" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="1017" y="439" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Полный транскрипт</text>
+<g>
+<rect x="988" y="505" width="176" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="1004" y="532" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Скачать PDF</text>
+</g>
+<g>
+<rect x="1176" y="505" width="200" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1192" y="532" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Скачать DOCX</text>
+</g>
+<text x="988" y="565" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">В макете скачивание не подключено.</text>
+<rect x="964" y="623" width="436" height="275" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="988" y="659" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Следующие действия</text>
+<text x="988" y="697" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Проверьте открытые вопросы перед передачей</text>
+<text x="988" y="722" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">протокола.</text>
+<g data-screen="3" role="button" tabindex="0">
+<rect x="988" y="763" width="386" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1004" y="790" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Вернуться к проверке</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="988" y="821" width="386" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1004" y="848" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Открыть контроль поручений</text>
+</g></svg></article></section><section id="screen5" hidden><article><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 80 1440 860"><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Куратор</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">06 / КОНТРОЛЬ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Контроль поручений</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Сроки, статусы и автоматические напоминания</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">06 / 09</text>
+<rect x="40" y="244" width="322" height="115" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#60728F">В работе</text>
+<text x="64" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#172B4D">8</text>
+<rect x="386" y="244" width="322" height="115" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="410" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#60728F">Срок скоро</text>
+<text x="410" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#172B4D">3</text>
+<rect x="732" y="244" width="322" height="115" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="756" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#60728F">Просрочено</text>
+<text x="756" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#172B4D">2</text>
+<rect x="1078" y="244" width="322" height="115" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1102" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#60728F">Выполнено</text>
+<text x="1102" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#172B4D">12</text>
+<text x="40" y="406" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Поиск поручения</text>
+<rect x="40" y="418" width="650" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="54" y="446" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Суть поручения или ответственное лицо</text>
+<g>
+<rect x="714" y="418" width="200" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="730" y="445" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Все ответственные</text>
+</g>
+<g>
+<rect x="930" y="418" width="200" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="946" y="445" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Все сроки</text>
+</g>
+<g>
+<rect x="1146" y="418" width="254" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1162" y="445" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Все статусы</text>
+</g>
+<rect x="40" y="494" width="928" height="357" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="530" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Поручения команды</text>
+<text x="64" y="571" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ПОРУЧЕНИЕ</text>
+<text x="463" y="571" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ОТВЕТСТВЕННЫЙ</text>
+<text x="644" y="571" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СРОК</text>
+<text x="786" y="571" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СТАТУС</text>
+<path d="M64 595h880" stroke="#D8E4F5"/>
+<text x="64" y="634" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">План тестирования</text>
+<text x="463" y="634" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участник 2</text>
+<text x="644" y="634" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">25.09.2026</text>
+<rect x="786" y="614" width="150" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="796" y="633" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">В работе</text>
+<path d="M64 671h880" stroke="#D8E4F5"/>
+<text x="64" y="710" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Проверка сценариев</text>
+<text x="463" y="710" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участник 3</text>
+<text x="644" y="710" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">22.09.2026</text>
+<rect x="786" y="690" width="150" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="796" y="709" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Просрочено</text>
+<path d="M64 747h880" stroke="#D8E4F5"/>
+<text x="64" y="786" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Подготовка материалов</text>
+<text x="463" y="786" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участник 1</text>
+<text x="644" y="786" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">21.09.2026</text>
+<rect x="786" y="766" width="150" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="796" y="785" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Выполнено</text>
+<rect x="992" y="494" width="408" height="357" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1016" y="530" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Напоминания</text>
+<rect x="1016" y="553" width="225" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1026" y="572" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Срок приближается</text>
+<text x="1016" y="618" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">План тестирования — срок через 2 дня.</text>
+<text x="1016" y="643" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Получатель: куратор поручения.</text>
+<path d="M1016 701h360" stroke="#D8E4F5"/>
+<rect x="1016" y="721" width="180" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1026" y="740" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Есть просрочка</text>
+<text x="1016" y="782" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Проверка сценариев — срок истёк.</text>
+<text x="1016" y="807" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Требуется обновить статус.</text>
+<text x="40" y="895" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Расширение: дашборд статусов. Напоминания руководителю / куратору предусмотрены сценарием ТЗ.</text></svg></article></section><section id="screen6" hidden><article><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 80 1440 860"><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">07 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Подключение ИИ-ассистента</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Ассистент присоединяется к онлайн-встрече как участник</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">07 / 09</text>
+<rect x="40" y="244" width="860" height="656" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Подключение к онлайн-встрече</text>
+<text x="64" y="320" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Платформа совещания</text>
+<g>
+<rect x="64" y="342" width="220" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="80" y="369" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Microsoft Teams</text>
+</g>
+<g>
+<rect x="300" y="342" width="220" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="316" y="369" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Zoom</text>
+</g>
+<g>
+<rect x="536" y="342" width="220" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="552" y="369" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Google Meet</text>
+</g>
+<text x="64" y="434" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Ссылка на встречу</text>
+<rect x="64" y="446" width="812" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="78" y="474" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Вставьте ссылку Teams, Zoom или Google Meet</text>
+<text x="64" y="532" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Имя участника-ассистента</text>
+<rect x="64" y="544" width="812" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="78" y="572" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">brieflyAI · запись и протокол</text>
+<text x="64" y="638" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Ассистент входит во встречу отдельным участником. Организатор допускает его из</text>
+<text x="64" y="664" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">зала ожидания.</text>
+<rect x="64" y="724" width="18" height="18" rx="3" fill="#2563EB" stroke="#D8E4F5"/>
+<text x="67" y="738" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">✓</text>
+<text x="93" y="738" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Участники уведомлены о записи и ИИ-транскрибации</text>
+<g data-screen="2" role="button" tabindex="0">
+<rect x="64" y="808" width="290" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="80" y="835" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Подключить ассистента</text>
+</g>
+<g data-screen="1" role="button" tabindex="0">
+<rect x="370" y="808" width="204" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="386" y="835" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Другой источник</text>
+</g>
+<rect x="924" y="244" width="476" height="336" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="948" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Состояния подключения</text>
+<text x="948" y="326" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">01  Подключение по ссылке</text>
+<text x="948" y="382" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">02  Ожидание допуска организатором</text>
+<text x="948" y="438" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">03  Ассистент вошёл во встречу</text>
+<text x="948" y="494" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">04  Запись и транскрибация</text>
+<rect x="924" y="604" width="476" height="296" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="948" y="640" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Если подключиться не удалось</text>
+<text x="948" y="680" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Проверьте ссылку и допуск ассистента. Можно</text>
+<text x="948" y="705" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">повторить подключение или загрузить запись</text>
+<text x="948" y="730" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">совещания.</text>
+<g>
+<rect x="948" y="786" width="205" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="964" y="813" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Повторить</text>
+</g>
+<g data-screen="1" role="button" tabindex="0">
+<rect x="1168" y="786" width="208" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1184" y="813" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Загрузить запись</text>
+</g>
+<text x="948" y="868" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Состояния показаны для макета.</text></svg></article></section><section id="screen7" hidden><article><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 80 1440 860"><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">08 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Обработка совещания</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">От аудио к протоколу: распознавание, говорящие, поручения и саммари</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">08 / 09</text>
+<rect x="40" y="244" width="866" height="655" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Этапы обработки</text>
+<rect x="64" y="311" width="44" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="330" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">01</text>
+<text x="128" y="333" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Распознавание речи · speech-to-text</text>
+<text x="128" y="368" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Русский, казахский и шала-казахский (смешанная речь).</text>
+<path d="M64 417h818" stroke="#D8E4F5"/>
+<rect x="64" y="438" width="44" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="457" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">02</text>
+<text x="128" y="460" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Разделение говорящих · диаризация</text>
+<text x="128" y="495" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Каждая реплика получает таймкод и идентификатор говорящего.</text>
+<path d="M64 544h818" stroke="#D8E4F5"/>
+<rect x="64" y="565" width="44" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="584" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">03</text>
+<text x="128" y="587" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Извлечение поручений</text>
+<text x="128" y="622" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Суть задачи, ответственный участник и срок исполнения.</text>
+<path d="M64 671h818" stroke="#D8E4F5"/>
+<rect x="64" y="692" width="44" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="711" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">04</text>
+<text x="128" y="714" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Формирование саммари</text>
+<text x="128" y="749" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Краткие итоги, решения и открытые вопросы совещания.</text>
+<rect x="930" y="244" width="470" height="246" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="954" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Входные данные</text>
+<text x="954" y="319" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Совещание · 32 минуты</text>
+<text x="954" y="360" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Источник: аудио/видеофайл, микрофон, live-поток</text>
+<text x="954" y="385" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">или ассистент во встрече.</text>
+<text x="954" y="451" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#172B4D">Языки: RU / KZ / смешанная речь</text>
+<rect x="930" y="514" width="470" height="385" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="954" y="550" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Результаты обработки</text>
+<text x="954" y="591" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Текстовый протокол / транскрипт</text>
+<text x="954" y="637" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Поручения: кто, что, к какому сроку</text>
+<text x="954" y="683" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Краткое саммари совещания</text>
+<text x="954" y="729" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Экспорт протокола: PDF / DOCX</text>
+<g data-screen="3" role="button" tabindex="0">
+<rect x="954" y="783" width="422" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="970" y="810" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Перейти к проверке результатов</text>
+</g>
+<text x="954" y="862" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Демонстрация завершённой обработки.</text></svg></article></section><section id="screen8" hidden><article><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 80 1440 860"><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">09 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Полный транскрипт</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Исходные реплики, таймкоды и привязка к участникам</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">09 / 09</text>
+<rect x="40" y="244" width="898" height="652" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Текстовый протокол · исходная речь</text>
+<text x="64" y="318" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="500" fill="#172B4D">▶  03:48 / 32:10   ━━━━━━━━━━━━━━━━━</text>
+<text x="64" y="386" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">00:12 · Данияр · русский</text>
+<text x="64" y="423" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Коллеги, сегодня обсуждаем подготовку пилотного запуска.</text>
+<path d="M64 478h850" stroke="#D8E4F5"/>
+<text x="64" y="503" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">03:48 · Айдана · казахский</text>
+<text x="64" y="540" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Мен тест жоспарын жұмаға дейін дайындаймын.</text>
+<path d="M64 595h850" stroke="#D8E4F5"/>
+<text x="64" y="620" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">07:25 · Руслан · смешанная речь</text>
+<text x="64" y="657" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Сначала проверим сценарии, потом нәтижесін командаға жібереміз.</text>
+<path d="M64 712h850" stroke="#D8E4F5"/>
+<text x="64" y="737" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">12:31 · Не определён · русский</text>
+<text x="64" y="774" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Подготовить список рисков. Срок уточним после встречи.</text>
+<rect x="962" y="244" width="438" height="326" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="986" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Говорящие → участники</text>
+<text x="986" y="321" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Говорящий 1 → Данияр</text>
+<text x="986" y="363" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Говорящий 2 → Айдана</text>
+<text x="986" y="405" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Говорящий 3 → Руслан</text>
+<text x="986" y="459" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Имена подтверждает секретарь. Неопределённые</text>
+<text x="986" y="483" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">реплики остаются на проверку.</text>
+<rect x="962" y="594" width="438" height="302" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="986" y="630" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Поручение из реплики 03:48</text>
+<text x="986" y="669" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Суть: подготовить план тестирования.</text>
+<text x="986" y="695" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Ответственный: Айдана. Срок: 25 сентября</text>
+<text x="986" y="721" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">2026.</text>
+<g data-screen="3" role="button" tabindex="0">
+<rect x="986" y="769" width="390" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1002" y="796" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Проверить поручение</text>
+</g>
+<g data-screen="4" role="button" tabindex="0">
+<rect x="986" y="827" width="390" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="1002" y="854" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Саммари и экспорт PDF / DOCX</text>
+</g></svg></article></section></main><footer class="site-footer"><span>brieflyAI · рабочий прототип</span><div><a href="HackAlem-functional-template.svg" download>Скачать SVG</a><a href="https://www.figma.com/design/x4c1fZI2RjQa7LtUgmOa9a">Файл Figma</a></div></footer><script>function show(n){n=Math.max(0,Math.min(8,n));if(n!==2)stopActiveRecorder();if(n!==0)window.brieflyStopRecording?.();document.querySelectorAll('main>section').forEach((e,i)=>e.hidden=i!==n);document.querySelectorAll('.sidebar-link').forEach(e=>{const active=Number(e.dataset.screen)===n;e.setAttribute('aria-current',active?'page':'false')});if(n!==0&&n!==2)document.getElementById('exampleScreens').open=true;if(window.innerWidth<=950){document.getElementById('sidebar').classList.remove('open');document.getElementById('menuToggle').setAttribute('aria-expanded','false')}window.scrollTo(0,0)}document.addEventListener('click',e=>{const t=e.target.closest('[data-screen]');if(t)show(Number(t.dataset.screen))});document.addEventListener('keydown',e=>{if(e.key==='Enter'){const t=e.target.closest('[data-screen]');if(t)show(Number(t.dataset.screen))}});document.getElementById('menuToggle').addEventListener('click',()=>{const side=document.getElementById('sidebar'),toggle=document.getElementById('menuToggle');if(window.innerWidth<=950){const open=side.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open))}else{const closed=document.body.classList.toggle('sidebar-collapsed');toggle.setAttribute('aria-expanded',String(!closed))}});document.getElementById('sidebarClose').addEventListener('click',()=>{document.getElementById('sidebar').classList.remove('open');if(window.innerWidth>950)document.body.classList.add('sidebar-collapsed');document.getElementById('menuToggle').setAttribute('aria-expanded','false')});const recording={mediaRecorder:null,stream:null,chunks:[],url:null,seconds:0,timer:null};function recordMessage(message){document.getElementById('recordStatus').textContent=message}function recordClock(){const m=String(Math.floor(recording.seconds/60)).padStart(2,'0'),s=String(recording.seconds%60).padStart(2,'0');document.getElementById('recordTimer').textContent=m+':'+s}function clearRecordTimer(){if(recording.timer){clearInterval(recording.timer);recording.timer=null}}function releaseRecordStream(){if(recording.stream){recording.stream.getTracks().forEach(track=>track.stop());recording.stream=null}}function stopActiveRecorder(){const r=recording.mediaRecorder;if(!r||r.state==='inactive')return;clearRecordTimer();r.stop();releaseRecordStream();document.getElementById('recordPause').disabled=true;document.getElementById('recordStop').disabled=true;recordMessage('Запись сохранена на этом устройстве')}async function startRecording(){if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){recordMessage('Этот браузер не поддерживает запись с микрофона');return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});recording.stream=stream;const formats=['audio/webm;codecs=opus','audio/webm','audio/mp4'];const mime=formats.find(t=>MediaRecorder.isTypeSupported(t));const recorder=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);recording.mediaRecorder=recorder;recording.chunks=[];recording.seconds=0;recordClock();clearRecordTimer();if(recording.url){URL.revokeObjectURL(recording.url);recording.url=null}document.getElementById('recordResult').hidden=true;recorder.ondataavailable=e=>{if(e.data.size>0)recording.chunks.push(e.data)};recorder.onstop=()=>{clearRecordTimer();releaseRecordStream();const blob=new Blob(recording.chunks,{type:recorder.mimeType||'audio/webm'});if(!blob.size){recordMessage('Не удалось сохранить аудио. Попробуйте записать ещё раз.');document.getElementById('recordStart').disabled=false;return}recording.url=URL.createObjectURL(blob);document.getElementById('recordPlayback').src=recording.url;const ext=blob.type.includes('mp4')?'m4a':'webm';const download=document.getElementById('recordDownload');download.href=recording.url;download.download='совещание-'+new Date().toISOString().slice(0,19).replaceAll(':','-')+'.'+ext;document.getElementById('recordResult').hidden=false;document.getElementById('recordStart').disabled=!document.getElementById('recordConsent').checked;recordMessage('Запись готова — можно прослушать или скачать')};recorder.start(1000);recording.timer=setInterval(()=>{if(recorder.state==='recording'){recording.seconds++;recordClock()}},1000);document.getElementById('recordStart').disabled=true;document.getElementById('recordPause').disabled=false;document.getElementById('recordPause').textContent='Пауза';document.getElementById('recordStop').disabled=false;recordMessage('Идёт запись с микрофона')}catch(error){clearRecordTimer();releaseRecordStream();document.getElementById('recordStart').disabled=!document.getElementById('recordConsent').checked;recordMessage(error?.name==='NotAllowedError'?'Доступ к микрофону не разрешён. Разрешите его в браузере.':'Не удалось включить микрофон: '+(error?.message||'проверьте устройство'))}}document.getElementById('recordConsent').addEventListener('change',e=>{if(!recording.mediaRecorder||recording.mediaRecorder.state==='inactive')document.getElementById('recordStart').disabled=!e.target.checked});document.getElementById('recordStart').addEventListener('click',startRecording);document.getElementById('recordPause').addEventListener('click',()=>{const r=recording.mediaRecorder;if(!r)return;if(r.state==='recording'){r.pause();document.getElementById('recordPause').textContent='Продолжить';recordMessage('Запись на паузе')}else if(r.state==='paused'){r.resume();document.getElementById('recordPause').textContent='Пауза';recordMessage('Идёт запись с микрофона')}});document.getElementById('recordStop').addEventListener('click',stopActiveRecorder);show(0);</script><script src="workflow.js" defer></script></html>

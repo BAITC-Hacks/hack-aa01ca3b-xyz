@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000"><title>Проверка результатов ИИ</title><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">04 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Проверка результатов ИИ</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Подтвердите говорящих, ответственных и сроки</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">04 / 09</text>
+<rect x="40" y="244" width="1360" height="62" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="282" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#172B4D">Обработка завершена · 3 говорящих · 2 поручения требуют уточнения</text>
+<g data-screen="4" role="button" tabindex="0">
+<rect x="1105" y="254" width="270" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="1121" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Подтвердить и продолжить</text>
+</g>
+<rect x="40" y="328" width="816" height="560" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="364" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Транскрипт и источник поручения</text>
+<text x="64" y="403" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="500" fill="#172B4D">▶  03:48 / 32:10   ━━━━━━━━━━━━━━━━━</text>
+<path d="M64 427h768" stroke="#D8E4F5"/>
+<text x="64" y="464" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">Говорящий 2 → Айдана (подтверждено)</text>
+<text x="64" y="505" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="400" fill="#172B4D">Мен тест жоспарын жұмаға дейін дайындаймын.</text>
+<rect x="64" y="558" width="768" height="127" rx="10" fill="#F5F8FF" stroke="#D8E4F5"/>
+<text x="84" y="589" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">ИИ выделил поручение</text>
+<text x="84" y="625" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" fill="#172B4D">Подготовить план тестирования к пятнице.</text>
+<text x="64" y="735" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#60728F">Говорящий не определён · 12:31</text>
+<text x="64" y="775" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" fill="#172B4D">Подготовить список рисков. Срок уточним после встречи.</text>
+<g>
+<rect x="64" y="824" width="222" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="80" y="851" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Исправить транскрипт</text>
+</g>
+<rect x="880" y="328" width="520" height="560" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="904" y="364" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Проверка поручения 1 из 2</text>
+<text x="904" y="416" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Что сделать</text>
+<rect x="904" y="428" width="472" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="918" y="456" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Подготовить план тестирования</text>
+<text x="904" y="512" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Ответственный</text>
+<rect x="904" y="524" width="472" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="918" y="552" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Айдана · говорящий 2</text>
+<text x="904" y="608" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Срок исполнения</text>
+<rect x="904" y="620" width="472" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="918" y="648" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">25.09.2026 — подтвердить дату</text>
+<text x="904" y="701" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="500" fill="#60728F">Источник: реплика 03:48</text>
+<g>
+<rect x="904" y="728" width="220" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="920" y="755" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Сохранить уточнение</text>
+</g>
+<path d="M904 792h472" stroke="#D8E4F5"/>
+<text x="904" y="824" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#172B4D">Поручение 2: список рисков</text>
+<text x="904" y="857" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Не определены ответственный и срок</text>
+<text x="40" y="924" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Перед подтверждением: заполните обязательные поля или явно отметьте «требует уточнения».</text></svg>

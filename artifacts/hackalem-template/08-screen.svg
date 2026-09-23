@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000"><title>Обработка совещания</title><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">08 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Обработка совещания</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">От аудио к протоколу: распознавание, говорящие, поручения и саммари</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">08 / 09</text>
+<rect x="40" y="244" width="866" height="655" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Этапы обработки</text>
+<rect x="64" y="311" width="44" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="330" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">01</text>
+<text x="128" y="333" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Распознавание речи · speech-to-text</text>
+<text x="128" y="368" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Русский, казахский и шала-казахский (смешанная речь).</text>
+<path d="M64 417h818" stroke="#D8E4F5"/>
+<rect x="64" y="438" width="44" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="457" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">02</text>
+<text x="128" y="460" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Разделение говорящих · диаризация</text>
+<text x="128" y="495" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Каждая реплика получает таймкод и идентификатор говорящего.</text>
+<path d="M64 544h818" stroke="#D8E4F5"/>
+<rect x="64" y="565" width="44" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="584" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">03</text>
+<text x="128" y="587" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Извлечение поручений</text>
+<text x="128" y="622" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Суть задачи, ответственный участник и срок исполнения.</text>
+<path d="M64 671h818" stroke="#D8E4F5"/>
+<rect x="64" y="692" width="44" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="74" y="711" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">04</text>
+<text x="128" y="714" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Формирование саммари</text>
+<text x="128" y="749" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Краткие итоги, решения и открытые вопросы совещания.</text>
+<rect x="930" y="244" width="470" height="246" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="954" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Входные данные</text>
+<text x="954" y="319" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="600" fill="#172B4D">Совещание · 32 минуты</text>
+<text x="954" y="360" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Источник: аудио/видеофайл, микрофон, live-поток</text>
+<text x="954" y="385" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">или ассистент во встрече.</text>
+<text x="954" y="451" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="500" fill="#172B4D">Языки: RU / KZ / смешанная речь</text>
+<rect x="930" y="514" width="470" height="385" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="954" y="550" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Результаты обработки</text>
+<text x="954" y="591" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Текстовый протокол / транскрипт</text>
+<text x="954" y="637" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Поручения: кто, что, к какому сроку</text>
+<text x="954" y="683" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Краткое саммари совещания</text>
+<text x="954" y="729" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#172B4D">Экспорт протокола: PDF / DOCX</text>
+<g data-screen="3" role="button" tabindex="0">
+<rect x="954" y="783" width="422" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="970" y="810" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Перейти к проверке результатов</text>
+</g>
+<text x="954" y="862" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Демонстрация завершённой обработки.</text></svg>

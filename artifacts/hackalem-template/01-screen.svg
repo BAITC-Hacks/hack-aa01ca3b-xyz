@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000"><title>Совещания</title><rect x="0" y="0" width="1440" height="1000" rx="0" fill="#F5F8FF" stroke="#F5F8FF"/>
+<rect x="0" y="0" width="1440" height="80" rx="0" fill="#FFFFFF" stroke="#FFFFFF"/>
+<text x="40" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#172B4D">brieflyAI</text>
+<g data-screen="0" role="button" tabindex="0">
+<rect x="280" y="19" width="150" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="296" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">Совещания</text>
+</g>
+<g data-screen="5" role="button" tabindex="0">
+<rect x="442" y="19" width="150" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="458" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Поручения</text>
+</g>
+<text x="935" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">Рабочее пространство</text>
+<rect x="1135" y="26" width="92" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="1145" y="45" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">RU / ҚАЗ</text>
+<text x="1250" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#172B4D">Секретарь</text>
+<text x="40" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">01 / СОВЕЩАНИЕ</text>
+<text x="40" y="173" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#172B4D">Совещания</text>
+<text x="40" y="207" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" fill="#60728F">Записи, расшифровки и протоколы команды</text>
+<rect x="40" y="225" width="76" height="4" rx="2" fill="#2563EB" stroke="#2563EB"/>
+<path d="M40 948h1360" stroke="#D8E4F5"/>
+<text x="40" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#60728F">Функциональный шаблон · демонстрационные данные</text>
+<text x="1270" y="977" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#60728F">01 / 09</text>
+<text x="40" y="258" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" fill="#172B4D">Поиск</text>
+<rect x="40" y="270" width="570" height="44" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="54" y="298" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#60728F">Название совещания или участник</text>
+<g>
+<rect x="632" y="270" width="164" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="648" y="297" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Все статусы</text>
+</g>
+<g data-screen="1" role="button" tabindex="0">
+<rect x="1135" y="270" width="265" height="42" rx="7" fill="#2563EB" stroke="#2563EB"/>
+<text x="1151" y="297" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF">+ Новое совещание</text>
+</g>
+<rect x="40" y="346" width="1360" height="343" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="382" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Последние совещания</text>
+<text x="64" y="419" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СОВЕЩАНИЕ</text>
+<text x="628" y="419" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ДАТА / ЯЗЫК</text>
+<text x="884" y="419" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">СОСТОЯНИЕ</text>
+<text x="1160" y="419" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#60728F">ДЕЙСТВИЕ</text>
+<path d="M64 440h1312" stroke="#D8E4F5"/>
+<text x="64" y="469" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#172B4D">Планирование пилотного запуска</text>
+<text x="64" y="494" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">3 участника · 32 минуты</text>
+<text x="628" y="477" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">23.09.2026 · RU + KZ</text>
+<rect x="884" y="460" width="230" height="28" rx="6" fill="#FFF3D9" stroke="#FFF3D9"/>
+<text x="894" y="479" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#885B0C">Требует проверки</text>
+<g data-screen="3" role="button" tabindex="0">
+<rect x="1160" y="454" width="208" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1176" y="481" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Проверить поручения</text>
+</g>
+<path d="M64 518h1312" stroke="#D8E4F5"/>
+<text x="64" y="547" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#172B4D">Еженедельная встреча команды</text>
+<text x="64" y="572" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">4 участника · 45 минут</text>
+<text x="628" y="555" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">21.09.2026 · Қазақша</text>
+<rect x="884" y="538" width="230" height="28" rx="6" fill="#E4F7EE" stroke="#E4F7EE"/>
+<text x="894" y="557" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#206B4B">Протокол готов</text>
+<g data-screen="4" role="button" tabindex="0">
+<rect x="1160" y="532" width="208" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1176" y="559" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Открыть протокол</text>
+</g>
+<path d="M64 596h1312" stroke="#D8E4F5"/>
+<text x="64" y="625" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#172B4D">Обсуждение бюджета</text>
+<text x="64" y="650" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#60728F">2 участника · 18 минут</text>
+<text x="628" y="633" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">20.09.2026 · Русский</text>
+<rect x="884" y="616" width="230" height="28" rx="6" fill="#EAF2FF" stroke="#EAF2FF"/>
+<text x="894" y="635" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#2457A6">Обработка записи</text>
+<g data-screen="7" role="button" tabindex="0">
+<rect x="1160" y="610" width="208" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="1176" y="637" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Посмотреть этапы</text>
+</g>
+<text x="40" y="733" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#2563EB">КОГДА НУЖНО ДЕЙСТВИЕ</text>
+<rect x="40" y="756" width="666" height="154" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="64" y="792" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Пока нет совещаний</text>
+<text x="64" y="822" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Добавьте первую запись — здесь появятся её расшифровка, поручения и</text>
+<text x="64" y="846" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">протокол.</text>
+<g data-screen="1" role="button" tabindex="0">
+<rect x="64" y="855" width="182" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="80" y="882" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Создать совещание</text>
+</g>
+<rect x="722" y="756" width="678" height="154" rx="10" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="746" y="792" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#172B4D">Не удалось обработать запись</text>
+<text x="746" y="822" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Файл сохранён. Можно повторить обработку.</text>
+<g data-screen="7" role="button" tabindex="0">
+<rect x="746" y="855" width="215" height="42" rx="7" fill="#FFFFFF" stroke="#D8E4F5"/>
+<text x="762" y="882" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#172B4D">Повторить обработку</text>
+</g></svg>
