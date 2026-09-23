@@ -95,6 +95,8 @@ def main() -> None:
             segments, _, _ = transcribe_meeting(path, progress=lambda share, text: print(f"  [{share:.0%}] {text}", flush=True))
         result, mode, note = analyze_meeting(segments, meeting_date, progress=lambda share, text: print(f"  {text}", flush=True))
         elapsed = time.time() - started
+        (ROOT / "out").mkdir(exist_ok=True)
+        (ROOT / "out" / f"eval_{Path(name).stem}.json").write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
         stats = score(gold_file["meetings"][name], result.get("actions", []))
         print(f"\n=== {name} ({mode}{', ' + note if note else ''})")
         for item, action, ok in stats["rows"]:
