@@ -1,5 +1,6 @@
 services:
   ollama:
+    profiles: ["models"]
     image: ollama/ollama:latest
     command: ["serve"]
     environment:
@@ -8,14 +9,15 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     healthcheck:
-      test: ["CMD-SHELL", "ollama list | grep -q \"$${OLLAMA_MODEL:-qwen3:4b}\""]
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1"]
       interval: 15s
       timeout: 10s
       retries: 60
-      start_period: 10m
+      start_period: 30s
     restart: unless-stopped
 
   ollama-model-init:
+    profiles: ["models"]
     image: ollama/ollama:latest
     entrypoint: ["/bin/sh", "-c"]
     command:
@@ -43,10 +45,7 @@ services:
       - model_data:/app/models
       - registry_data:/app/data/registry
     ports:
-      - "127.0.0.1:8000:8000"
-    depends_on:
-      ollama:
-        condition: service_healthy
+      - "127.0.0.1:8001:8000"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]

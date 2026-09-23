@@ -14,6 +14,78 @@
 
 ---
 
+## Структура проекта и назначение файлов
+
+```text
+.
+├── app/                              # Python-приложение
+│   ├── __init__.py                   # Маркер Python-пакета
+│   ├── api/                          # HTTP API для React-клиента
+│   │   ├── __init__.py               # Маркер пакета API
+│   │   ├── main.py                   # FastAPI: обработка встречи, экспорт, health checks
+│   │   ├── schemas.py                # Проверяемые форматы входных/выходных данных
+│   │   └── README.md                 # Краткая документация API
+│   ├── core/
+│   │   ├── __init__.py               # Маркер пакета core
+│   │   └── config.py                 # Пути проекта и каталогов моделей
+│   ├── services/                     # Логика обработки записи и протокола
+│   │   ├── __init__.py               # Маркер пакета сервисов
+│   │   ├── deadlines.py              # Разбор относительных/словесных сроков в даты
+│   │   ├── diarize.py                # Диаризация голосов через sherpa-onnx
+│   │   ├── exporter.py               # Экспорт результатов в PDF и DOCX
+│   │   ├── extractor.py              # Локальный Ollama: участники, итоги и поручения
+│   │   ├── live.py                   # Захват микрофона и живая расшифровка
+│   │   ├── media.py                  # Проверка и подготовка аудио/видео через ffmpeg
+│   │   ├── registry.py               # Локальный реестр поручений и статусов
+│   │   └── stt.py                    # Распознавание русского, казахского и смешанного текста
+│   ├── ui/
+│   │   ├── __init__.py               # Маркер пакета UI
+│   │   └── i18n.py                   # Переводы интерфейса Streamlit
+│   └── main.py                       # Отдельный интерфейс Streamlit
+├── frontend/                         # Основной React-интерфейс
+│   ├── src/
+│   │   ├── App.jsx                   # Страницы и сценарии пользователя
+│   │   ├── main.jsx                  # Точка входа React
+│   │   └── styles.css                # Стили и темы
+│   ├── Dockerfile                    # Сборка React и упаковка в Nginx
+│   ├── .dockerignore                  # Исключает npm-кэш и сборку из контекста
+│   ├── index.html                    # HTML-контейнер приложения
+│   ├── nginx.conf                    # SPA fallback и прокси /api на FastAPI
+│   ├── package.json                  # npm-команды и версии зависимостей
+│   ├── package-lock.json             # Зафиксированное дерево npm-зависимостей
+│   └── vite.config.js                # Настройки Vite и dev-прокси к API
+├── data/
+│   ├── samples/                      # Обезличенные/синтетические материалы для демонстрации
+│   │   ├── organizer_examples/
+│   │   │   ├── meeting1.txt           # Транскрипт встречи №1
+│   │   │   └── meeting2.txt           # Транскрипт встречи №2
+│   │   ├── gold.json                 # Эталонные поручения для оценки
+│   │   ├── synthetic_meeting.mp3     # Синтетическая демонстрационная запись
+│   │   ├── synthetic_meeting.result.json # Подготовленный результат распознавания демо-записи
+│   │   └── synthetic_meeting_script.txt  # Текст сценария синтетической встречи
+│   └── templates/fonts/              # Шрифты PDF: DejaVuSans.ttf, DejaVuSans-Bold.ttf и лицензия
+├── scripts/
+│   ├── download_models.py            # Скачивает веса Whisper и sherpa-onnx
+│   ├── evaluate.py                   # Сравнивает поручения модели с gold.json
+│   ├── make_synthetic_sample.sh      # Создаёт синтетический аудиопример (macOS)
+│   ├── prepare_llm_training.py       # Готовит приватный локальный JSONL для MLX-LoRA
+│   └── run_demo.py                   # Запускает полный конвейер из терминала
+├── .dockerignore                     # Исключает кэши, веса и приватные данные из образов
+├── .gitignore                        # Исключает локальные окружения, модели и результаты
+├── .streamlit/config.toml            # Настройки интерфейса Streamlit
+├── AI_HANDOFF.md                     # Краткая передача контекста следующему ИИ
+├── CASE_TASK_MAP.md                  # Распределение работ и покрытие кейса
+├── DEVLOG.md                         # Журнал изменений/проверок проекта
+├── Dockerfile                        # Образ Python API
+├── docker-compose.yml                # Compose-сервисы, необязательный профиль models и volumes
+├── requirements.txt                  # Python-зависимости
+└── README.md                         # Установка, запуск, архитектура и оценка качества
+```
+
+Каталоги `models/`, `data/registry/`, `data/private_training/`, `.venv/`, `.venv-mlx/`, `frontend/node_modules/` и `out/` создаются локально при запуске или обучении. Они не являются исходным кодом и не добавляются в Docker-образы; runtime-модели и реестр в Compose сохраняются в volumes.
+
+---
+
 ## Проверка за 5 минут
 
 ```bash
@@ -55,19 +127,32 @@ Vite проксирует `/api` на `127.0.0.1:8000`. Откройте адр�
 
 ## Запуск через Docker Compose
 
-Нужен Docker Desktop с запущенным Docker Engine. На первом запуске Docker скачает базовые образы, около 5,5 ГБ моделей распознавания и модель Ollama `qwen3:4b` (около 2,5 ГБ); для Docker Desktop выделите не менее 8 ГБ памяти. Docker Compose поднимает React-интерфейс, FastAPI и локальный Ollama. Порты доступны только на этом компьютере. Весовые файлы, модели и реестр поручений хранятся в Docker volumes, а приватные данные обучения и локальное MLX-окружение не попадают в build context.
+Нужен Docker Desktop с запущенным Docker Engine. Для Docker Desktop выделите не менее 8 ГБ памяти. Обычный запуск поднимает React-интерфейс и FastAPI без загрузки больших ИИ-моделей. Порты доступны только на этом компьютере. Весовые файлы и реестр поручений хранятся в Docker volumes, а приватные данные обучения и локальное MLX-окружение не попадают в build context.
 
-В корне репозитория выполните:
+Чтобы собрать образы и открыть интерфейс без ожидания скачивания моделей, в корне репозитория выполните:
 
 ```bash
 docker compose build
-docker compose run --rm --no-deps -e HF_HUB_OFFLINE=0 api python scripts/download_models.py
 docker compose up -d
 ```
 
-Сервис `ollama-model-init` при первом старте скачает `qwen3:4b` и завершится; API дождётся, пока модель будет готова. Дождитесь статуса `healthy` у `api` и `ollama`, затем откройте http://127.0.0.1:8080. API и OpenAPI доступны на http://127.0.0.1:8000 и http://127.0.0.1:8000/docs. Состояние проверяется командой `docker compose ps`, логи загрузки модели — `docker compose logs -f ollama-model-init`, логи API — `docker compose logs -f api`. Для остановки выполните `docker compose down`; скачанные модели и реестр останутся в volumes. `docker compose down -v` удаляет эти volumes.
+После старта откройте http://127.0.0.1:8080. API и OpenAPI доступны на http://127.0.0.1:8001 и http://127.0.0.1:8001/docs. Порт `8001` выбран, чтобы не конфликтовать с FastAPI, запущенным локально на `8000`. Состояние проверяется командой `docker compose ps`, журналы API — `docker compose logs -f api`. Без моделей интерфейс откроется, но обработка аудио ещё не будет доступна.
 
-Конфигурацию Compose проверили командой `docker compose config`. Сборку и старт образов нужно подтвердить при запущенном Docker Engine; в среде редактирования он может быть выключен.
+Чтобы включить полный сценарий обработки записи, отдельно загрузите модели (для этого нужна сеть):
+
+```bash
+# Whisper и диаризация: примерно 5,5 ГБ, в volume model_data
+docker compose run --rm --no-deps -e HF_HUB_OFFLINE=0 api python scripts/download_models.py
+
+# Ollama и LLM qwen3:4b: примерно 2,5 ГБ, в volume ollama_data
+docker compose --profile models up -d
+```
+
+При включении профиля `models` сервис `ollama-model-init` скачает `qwen3:4b` и завершится. Следить за загрузкой можно через `docker compose logs -f ollama-model-init`. Без профиля контейнер Ollama и его модель не скачиваются.
+
+Для остановки выполните `docker compose down`; скачанные модели и реестр останутся в volumes. `docker compose down -v` удаляет эти volumes.
+
+В этой сессии `docker compose config` и сборка обоих образов прошли. Первая попытка старта обнаружила занятый локальным FastAPI порт `8000`, поэтому публикация API перенесена на `8001`. После этого изменения сервисы не запускались по просьбе пользователя.
 
 
 ## Интерфейс Briefly AI
