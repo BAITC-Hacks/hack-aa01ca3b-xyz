@@ -67,7 +67,7 @@ def _process(upload: Any, meeting_title: str, meeting_date: date, expected_speak
             "analysis_mode": analysis_mode,
             "analysis_note": analysis_note,
             "audio": audio_bytes,
-            "audio_format": f"audio/{'mpeg' if suffix == '.mp3' else suffix.lstrip('.')}",
+            "audio_format": {".mp3": "audio/mpeg", ".wav": "audio/wav", ".audio": "audio/wav", ".m4a": "audio/mp4"}.get(suffix, f"audio/{suffix.lstrip('.')}"),
         }
 
 
@@ -92,6 +92,9 @@ with left:
         type=["wav", "mp3", "m4a", "ogg", "mp4", "mov", "mkv", "webm", "avi"],
         help="Файл хранится только во временной папке и удаляется после обработки.",
     )
+    recorded = st.audio_input("…или запишите совещание прямо здесь (микрофон этого компьютера)")
+    if recorded and not upload:
+        upload = recorded
 with right:
     meeting_date = st.date_input("Дата совещания", value=date.today(), help="От этой даты считаются сроки «до пятницы», «за две недели» и т. п.")
     expected_speakers = st.number_input("Ожидаемое число участников (подсказка)", min_value=0, max_value=30, value=0, help="0 — определить автоматически")
