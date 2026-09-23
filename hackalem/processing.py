@@ -207,6 +207,4 @@ def analyze_meeting(segments: list[dict[str, Any]], meeting_date: str) -> tuple[
         return _heuristic_analysis(segments), "fallback", f"Локальный Ollama недоступен; включено упрощённое извлечение. Проверьте поручения вручную. ({exc})"
 
 
-def _stamp(seconds: float) -> str:
-    total = max(0, int(seconds))
-    return f"{total // 60:02d}:{total % 60:02d}"
+
