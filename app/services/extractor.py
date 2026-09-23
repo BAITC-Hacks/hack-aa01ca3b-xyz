@@ -270,7 +270,7 @@ ACTIONS_SCHEMA: dict[str, Any] = {
 }
 
 ACTION_RULES = """Правила извлечения поручений:
-1. Поручение — действие, которое конкретный человек или подразделение должен выполнить после совещания. Обычный доклад, мнение или вопрос — не поручение. Предложение участника становится поручением, только если председатель его принял («Согласен», «Логично», «Хорошо»).
+1. Поручение — действие, которое конкретный человек или подразделение должен выполнить после совещания. Обычный доклад, мнение или вопрос — не поручение. Предложение участника становится поручением, только если председатель его принял («Согласен», «Логично», «Хорошо», «Келісемін»). «Это на вас» / «это ваше» после предложения участника = поручение ЭТОМУ участнику выполнить его же предложение — отдельное поручение со своим сроком.
 2. Делегирование: «пусть Ерлан подготовит…» — ответственный Ерлан, даже если его нет на совещании.
 3. Ответственным может быть подразделение («юридический департамент»).
 4. Если срок обсуждали несколько раз («две недели?» — «маловато» — «три недели, к пятнадцатому октября»), бери ПОСЛЕДНИЙ согласованный срок.
@@ -471,7 +471,7 @@ def _local_llm_analysis(segments: list[dict[str, Any]], meeting_date: str, progr
         "summary_items": summary_items,
         "participants": participants,
         "actions": cleaned,
-        "flags": list(dict.fromkeys(flags)),
+        "flags": [flag for flag in dict.fromkeys(flags) if _trusted_flag(flag)],
         "agent_trace": trace,
         "model": OLLAMA_MODEL,
     }
@@ -564,6 +564,11 @@ def _names_from_addresses(segments: list[dict[str, Any]]) -> dict[str, str]:
                 used.add(key)
                 break
     return names
+
+
+def _trusted_flag(flag: str) -> bool:
+    """Keep program-checked flags (no deadline, bad date) and LLM notes about contradictions only."""
+    return flag.startswith(("Поручение без срока", "Срок «")) or "противореч" in flag.lower()
 
 
 def _grounded(name: str, transcript: str) -> bool:
