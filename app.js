@@ -225,6 +225,21 @@ elements.clearSearch.addEventListener('click', () => {
   elements.search.focus();
 });
 
+document.querySelector('#reset-demo').addEventListener('click', () => {
+  const confirmed = window.confirm('Вернуть исходные демо-данные? Добавленные в этом браузере задачи будут удалены.');
+  if (!confirmed) return;
+
+  tasks = demoTasks.map((task) => ({ ...task }));
+  activeFilter = 'all';
+  searchTerm = '';
+  elements.search.value = '';
+  document.querySelectorAll('.nav-item').forEach((item) => item.classList.remove('is-active'));
+  document.querySelector('.nav-item[data-filter-link="all"]')?.classList.add('is-active');
+  setFilter('all');
+  saveTasks();
+  render();
+});
+
 elements.taskList.addEventListener('click', (event) => {
   const button = event.target.closest('[data-action="toggle"]');
   if (!button) return;
