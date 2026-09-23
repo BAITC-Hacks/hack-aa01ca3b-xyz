@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f6f8" />
+    <title>Контур — контроль сроков</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#overview" aria-label="Контур, главная">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span><strong>контур</strong><small>операционный контроль</small></span>
+        </a>
+
+        <div class="workspace-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+        <nav class="main-nav" aria-label="Основная навигация">
+          <a class="nav-item is-active" href="#overview" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="4" rx="1.5"/><rect x="13.5" y="10.5" width="7" height="10" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+            Обзор
+          </a>
+          <a class="nav-item" href="#tasks" data-filter-link="all">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="m3.5 6 .8.8L6 5M3.5 12l.8.8L6 11M3.5 18l.8.8L6 17"/></svg>
+            Все задачи <span class="nav-count" id="nav-open-count">0</span>
+          </a>
+          <a class="nav-item" href="#tasks" data-filter-link="risk">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 21 20H3L12 3.5Z"/><path d="M12 9v5M12 17.2v.1"/></svg>
+            Требуют внимания
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="demo-card">
+            <span class="demo-dot"></span>
+            <div><strong>Демо-режим</strong><small>Данные хранятся в браузере</small></div>
+          </div>
+          <div class="profile">
+            <div class="avatar">ИК</div>
+            <div class="profile-copy"><strong>Илья К.</strong><small>Команда хакатона</small></div>
+            <button class="more-button" aria-label="Профиль">···</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="overview">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Рабочее пространство</span><span class="crumb-divider">/</span><strong>Обзор</strong></div>
+          <div class="topbar-right"><span class="today-label" id="today-label"></span><span class="top-avatar">ИК</span></div>
+        </header>
+
+        <section class="page-heading">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span> ПАНЕЛЬ КОНТРОЛЯ</div>
+            <h1>Доброе утро, Илья <span class="wave">✳</span></h1>
+            <p>Собрали сроки и сигналы риска по вашим проектам.</p>
+          </div>
+          <button class="primary-button" id="open-task-dialog" type="button">
+            <span class="plus-icon" aria-hidden="true">+</span> Новая задача
+          </button>
+        </section>
+
+        <section class="metrics-grid" aria-label="Сводка по задачам">
+          <article class="metric-card metric-total">
+            <div class="metric-top"><span>Открытые задачи</span><span class="metric-icon neutral">↗</span></div>
+            <div class="metric-number" id="metric-open">0</div>
+            <div class="metric-foot"><span class="mini-dot blue"></span> В работе по всем проектам</div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-top"><span>Просрочено</span><span class="metric-icon danger">!</span></div>
+            <div class="metric-number" id="metric-overdue">0</div>
+            <div class="metric-foot"><span class="status-text danger-text">Нужна реакция</span></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-top"><span>Скоро срок</span><span class="metric-icon warning">◷</span></div>
+            <div class="metric-number" id="metric-soon">0</div>
+            <div class="metric-foot"><span class="status-text warning-text">В ближайшие 3 дня</span></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-top"><span>Закрыто</span><span class="metric-icon success">✓</span></div>
+            <div class="metric-number" id="metric-done">0</div>
+            <div class="metric-foot"><span class="mini-dot green"></span> Отмечено выполненным</div>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <section class="tasks-panel" id="tasks">
+            <div class="panel-heading">
+              <div><div class="section-kicker">ПОРТФЕЛЬ ПРОЕКТОВ</div><h2>Задачи и сроки <span class="heading-count" id="list-count">0</span></h2></div>
+              <button class="text-button" id="clear-search" type="button" hidden>Сбросить поиск</button>
+            </div>
+            <div class="list-toolbar">
+              <div class="filter-tabs" role="tablist" aria-label="Фильтр задач">
+                <button class="filter-tab is-selected" data-filter="all" type="button" role="tab" aria-selected="true">Все</button>
+                <button class="filter-tab" data-filter="risk" type="button" role="tab" aria-selected="false">Риск <span class="tab-risk-count" id="tab-risk-count">0</span></button>
+                <button class="filter-tab" data-filter="done" type="button" role="tab" aria-selected="false">Завершённые</button>
+              </div>
+              <label class="search-box">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+                <input id="search-input" type="search" placeholder="Найти задачу" aria-label="Найти задачу" />
+                <kbd>⌘ K</kbd>
+              </label>
+            </div>
+            <div class="table-scroll">
+              <table class="task-table">
+                <thead><tr><th scope="col">ЗАДАЧА</th><th scope="col">ПРОЕКТ</th><th scope="col">СРОК</th><th scope="col">СТАТУС</th></tr></thead>
+                <tbody id="task-list"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="empty-state" hidden>
+              <div class="empty-icon">⌕</div><strong>Ничего не нашлось</strong><span>Измените запрос или выберите другой фильтр.</span>
+            </div>
+            <div class="table-footer"><span id="table-summary"></span><span class="footer-source"><i></i> Данные обновляются автоматически</span></div>
+          </section>
+
+          <aside class="insight-column">
+            <section class="insight-card">
+              <div class="insight-header"><span class="insight-symbol">✳</span><span class="insight-label">КОНТУР · СИГНАЛ</span><span class="live-dot"></span></div>
+              <h3 id="insight-title">Фокус на сроках</h3>
+              <p id="insight-copy">Добавьте задачи, чтобы видеть просрочки и ближайшие дедлайны в одном месте.</p>
+              <a href="#tasks" class="insight-link" data-filter-link="risk">Посмотреть задачи <span>→</span></a>
+              <div class="insight-decoration" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            </section>
+
+            <section class="attention-card">
+              <div class="attention-heading"><h3>На контроле</h3><span class="attention-count" id="attention-count">0</span></div>
+              <p>Ближайшие действия команды</p>
+              <div class="attention-list" id="attention-list"></div>
+              <button class="attention-link" data-filter-link="risk" type="button">Открыть список <span>→</span></button>
+            </section>
+            <div class="privacy-note"><span class="lock-icon">⌑</span> Демо-данные не отправляются на сервер</div>
+          </aside>
+        </section>
+        <footer class="app-footer"><span>КОНТУР <b>·</b> MVP ДЛЯ ТРЕКА ИННОВАЦИИ</span><span>Сроки под контролем</span></footer>
+      </main>
+    </div>
+
+    <dialog class="task-dialog" id="task-dialog">
+      <form id="task-form" method="dialog">
+        <div class="dialog-top"><div><div class="section-kicker">НОВАЯ ЗАПИСЬ</div><h2>Добавить задачу</h2></div><button class="close-dialog" type="button" id="close-dialog" aria-label="Закрыть">×</button></div>
+        <label class="form-field">Название задачи<input name="title" required maxlength="90" placeholder="Например, согласовать график работ" /></label>
+        <div class="form-row">
+          <label class="form-field">Проект<input name="project" required maxlength="50" placeholder="Название проекта" /></label>
+          <label class="form-field">Ответственный<input name="owner" maxlength="40" placeholder="Имя или команда" /></label>
+        </div>
+        <div class="form-row">
+          <label class="form-field">Срок<input name="dueDate" required type="date" /></label>
+          <label class="form-field">Приоритет<select name="priority"><option value="high">Высокий</option><option value="medium" selected>Обычный</option><option value="low">Низкий</option></select></label>
+        </div>
+        <label class="form-field">Тип документа<select name="kind"><option>Документация</option><option>Счёт</option><option>Поставка</option><option>Другое</option></select></label>
+        <div class="dialog-actions"><button class="secondary-button" type="button" id="cancel-dialog">Отмена</button><button class="primary-button" type="submit">Добавить задачу</button></div>
+      </form>
+    </dialog>
+  </body>
+</html>
