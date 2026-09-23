@@ -21,7 +21,7 @@ from app.services import stt
 
 
 app = FastAPI(
-    title="Хаттама API",
+    title="Briefly AI API",
     description="Локальная обработка записей совещаний без внешних ИИ API.",
     version="1.0.0",
 )
@@ -35,7 +35,7 @@ _processing_slots = threading.BoundedSemaphore(MAX_CONCURRENT_JOBS)
 @app.get("/api/health")
 def health() -> dict[str, str]:
     """Liveness check; does not load large ML models."""
-    return {"status": "ok", "service": "Хаттама API"}
+    return {"status": "ok", "service": "Briefly AI API"}
 
 
 @app.get("/api/health/ready")

@@ -10,8 +10,11 @@ transformers>=4.57
 peft>=0.18
 sherpa-onnx>=1.12
 numpy>=1.26
+SpeechRecognition>=3.10
 python-docx>=1.1,<2
 reportlab>=4,<5
 pandas>=2,<3
 # Необязательно: диаризация pyannote Community-1 (нужен HF_TOKEN)
 # pyannote.audio>=4,<5
+# Необязательно: живая расшифровка с микрофона (macOS: brew install portaudio; Linux: apt install portaudio19-dev)
+# pyaudio>=0.2.14

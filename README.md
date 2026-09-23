@@ -1,8 +1,8 @@
-# Хаттама — автопротоколирование совещаний с фиксацией поручений
+# Briefly AI — автопротоколирование совещаний с фиксацией поручений
 
 **Трек 08 «Инновации», HackAlem AI 2026. Команда XYZ.**
 
-«Хаттама» по-казахски значит «протокол». Прототип получает аудио- или видеозапись совещания на **русском, казахском или шала-казахском** и делает следующее:
+**Briefly AI** превращает совещание в короткий протокол с поручениями. Прототип получает аудио- или видеозапись совещания на **русском, казахском или шала-казахском** и делает следующее:
 
 1. Разделяет голоса участников (диаризация).
 2. Распознаёт каждую реплику моделью, которая лучше знает её язык.
@@ -81,6 +81,7 @@ docker compose up -d
 | Диаризация с привязкой поручения к участнику | sherpa-onnx (pyannote-segmentation-3.0 + 3D-Speaker), без токенов. Реплики получают метки `SPEAKER_XX`, агент по обращениям сопоставляет метки с именами, у поручения есть поле «Голос» | `app/services/diarize.py` | колонка «Голос» в протоколе |
 | Экспорт протокола (PDF/DOCX) | DOCX (python-docx) и PDF (reportlab + встроенный шрифт DejaVu с казахскими буквами), плюс CSV поручений | `app/services/exporter.py` | кнопки «Скачать DOCX/PDF», `out/*.docx` |
 | Саммари | Текст и таблица «Направление / доклад, Показатель, Проблема», как в примерах ТЗ | `extractor._overview_prompt` | блок «Саммари» |
+| Живая расшифровка (вход «live-поток») | Вкладка «⚡ Живая расшифровка»: [SpeechRecognition](https://github.com/Uberi/speech_recognition) захватывает микрофон и режет речь на фразы по паузам, каждую фразу распознаёт локальная модель kaz-rus. Облачные распознаватели библиотеки (Google и др.) не вызываются. После остановки ИИ разбирает всю запись: голоса, поручения, протокол | `app/services/live.py`, `stt.transcribe_phrase` | вкладка в интерфейсе, нужен `pip install pyaudio` |
 | Уведомление участников о записи (сценарий 1) | Без галочки согласия обработка не запускается. Отметка о согласии попадает в протокол | `app/main.py` | интерфейс |
 | Напоминания о сроках (сценарий 2) | Статусы «В работе / Просрочено / Выполнено». Напоминания за 7 дней до срока и при просрочке | `app/main.py` | блок «Напоминания по срокам» |
 | Закрытый контур | Внешних API нет. Ollama работает только через loopback (удалённые адреса отклоняются), `HF_HUB_OFFLINE=1`, телеметрия выключена | `extractor._ollama_url` | можно отключить сеть после загрузки моделей |
@@ -203,6 +204,7 @@ flowchart LR
 | Что | Команда |
 |---|---|
 | Веб-интерфейс | `streamlit run app/main.py --server.address 127.0.0.1 --server.port 8501` |
+| Живая расшифровка | `pip install pyaudio` (macOS: сначала `brew install portaudio`), затем вкладка «⚡ Живая расшифровка» в веб-интерфейсе |
 | Консольный прогон | `python scripts/run_demo.py [файл] --date 2026-09-23 --speakers 4` |
 | Проверка качества | `python scripts/evaluate.py` |
 | Своя синтетическая запись (macOS) | `./scripts/make_synthetic_sample.sh` |
@@ -269,6 +271,7 @@ flowchart LR
 | [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx): pyannote-segmentation-3.0 (ONNX), 3D-Speaker ERes2Net | Диаризация | Apache-2.0 / MIT |
 | [Qwen3-4B](https://ollama.com/library/qwen3) через [Ollama](https://ollama.com) | ИИ-агент поручений | Apache-2.0 / MIT |
 | faster-whisper, transformers, peft, PyTorch, Streamlit, python-docx, reportlab, pandas | Инфраструктура | MIT / Apache-2.0 / BSD |
+| [SpeechRecognition](https://github.com/Uberi/speech_recognition) + PyAudio / PortAudio | Захват микрофона и нарезка фраз для живой расшифровки (без облачных API) | BSD-3 / MIT |
 | Шрифт DejaVu Sans (`data/templates/fonts`) | Казахские буквы в PDF | Bitstream Vera / DejaVu |
 | Примеры совещаний `data/samples/organizer_examples` | Тексты из ТЗ кейса | материалы организаторов |
 

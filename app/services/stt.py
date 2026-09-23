@@ -254,3 +254,20 @@ def _two_pass(waveform: np.ndarray, windows: list[tuple[float, float, str]], use
         if progress:
             progress(0.6 + 0.4 * (index + 1) / len(russian), f"Уточняем русские реплики: {index + 1} из {len(russian)}")
     return segments
+
+
+def transcribe_phrase(samples: np.ndarray) -> tuple[str, str]:
+    """Recognize one live phrase (fast path for live captions): Kazakh/Russian model with its own kk/ru choice."""
+    if len(samples) < MIN_CHUNK_S * SAMPLE_RATE:
+        return "", ""
+    step = int(MAX_CHUNK_S * SAMPLE_RATE)
+    texts, language = [], "ru"
+    for offset in range(0, len(samples), step):
+        features = _features(samples[offset: offset + step])
+        if kz_available():
+            language = "ru" if _russian_probability(_kz_model(), features) >= 0.5 else "kk"
+            texts.append(_generate(_kz_model(), features, language))
+        else:
+            texts.append(_generate(_base_model(), features, "ru"))
+    text = " ".join(part for part in texts if part).strip()
+    return text, language_tag(text, language)

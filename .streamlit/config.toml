@@ -4,3 +4,12 @@ gatherUsageStats = false
 [server]
 address = "127.0.0.1"
 maxUploadSize = 1024
+
+[theme]
+base = "light"
+primaryColor = "#5B3FE0"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F6F4FF"
+textColor = "#1E1B3A"
+font = "sans serif"
+baseRadius = "0.8rem"

@@ -110,7 +110,7 @@ function App() {
   return (
     <main className="page-shell">
       <header className="topbar">
-        <a className="brand" href="#top"><span className="brand-icon">Х</span><span><b>Хаттама</b><small>Локальный ИИ-протокол</small></span></a>
+        <a className="brand" href="#top"><span className="brand-icon">B</span><span><b>Briefly AI</b><small>Локальный ИИ-протокол</small></span></a>
         <span className="privacy-pill"><i />Данные обрабатываются локально</span>
       </header>
       <section className="hero" id="top">
@@ -166,7 +166,7 @@ function App() {
 
         <details className="card transcript-card"><summary>Полный транскрипт <span>{result.transcript.length} фрагм.</span></summary><div className="transcript-list">{result.transcript.map((line, index) => <p key={`${line.id ?? index}-${line.start}`}><time>{clock(line.start)}</time><b>{speakerNames[line.speaker] || line.speaker}</b><span>{line.text}</span></p>)}</div></details>
       </section>}
-      <footer>Хаттама · аудио не покидает ваш компьютер · проверьте протокол перед использованием</footer>
+      <footer>Briefly AI · аудио не покидает ваш компьютер · проверьте протокол перед использованием</footer>
     </main>
   );
 }
