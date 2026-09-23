@@ -55,6 +55,8 @@ Vite проксирует `/api` на `127.0.0.1:8000`. Откройте адр�
 
 ## Запуск через Docker Compose
 
+> **Что проверено.** Основной путь проверен с нуля на свежем клоне с GitHub: `venv` → `pip install -r requirements.txt` → `scripts/download_models.py` → `scripts/run_demo.py` / Streamlit. Проверены также FastAPI (`/api/health`, `/docs`) и сборка React (`npm install && npm run build`). Сборку Docker-образов на чистой машине проверить не успели, поэтому если с Docker возникнут проблемы, используйте основной путь выше.
+
 Docker Compose поднимает React-интерфейс, FastAPI и локальный Ollama. Сервисы публикуются только на loopback; модели Whisper/sherpa и Ollama хранятся в Docker volumes. Сначала соберите API image и загрузите локальные модели распознавания, затем запустите стек:
 
 ```bash

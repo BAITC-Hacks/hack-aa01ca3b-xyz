@@ -5,3 +5,5 @@ __pycache__/
 models/
 .streamlit/secrets.toml
 out/
+node_modules/
+frontend/dist/
