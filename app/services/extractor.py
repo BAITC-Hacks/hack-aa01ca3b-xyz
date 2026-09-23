@@ -15,15 +15,15 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable
 
-from hackalem import deadlines
+from app.core.config import MODELS_DIR
+from . import deadlines
 
-ROOT = Path(__file__).resolve().parents[1]
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "small")
-WHISPER_CACHE = Path(os.getenv("WHISPER_CACHE", ROOT / "models" / "whisper-cache"))
+WHISPER_CACHE = Path(os.getenv("WHISPER_CACHE", MODELS_DIR / "whisper-cache"))
 DIARIZATION_PATH = Path(
     os.getenv(
         "DIARIZATION_MODEL_PATH",
-        ROOT / "models" / "pyannote-speaker-diarization-community-1",
+        MODELS_DIR / "pyannote-speaker-diarization-community-1",
     )
 )
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:4b")
@@ -56,7 +56,7 @@ def transcribe_meeting(
     """
     from faster_whisper.audio import decode_audio
 
-    from hackalem import asr
+    from . import stt as asr
 
     if not asr.kz_available() and not asr.base_available():
         _notify(progress, 0.1, "Модели kaz-rus не найдены — используем faster-whisper.")
@@ -85,7 +85,7 @@ def transcribe_meeting(
 
 
 def _speaker_turns(waveform: Any, expected_speakers: int | None) -> list[tuple[float, float, str]]:
-    from hackalem import diarization_sherpa
+    from . import diarize as diarization_sherpa
 
     backend = os.getenv("DIARIZATION_BACKEND", "sherpa")
     if backend == "pyannote" and DIARIZATION_PATH.exists():

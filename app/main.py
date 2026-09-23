@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import tempfile
+import sys
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -8,9 +9,15 @@ from typing import Any
 import pandas as pd
 import streamlit as st
 
-from hackalem.export import build_docx, build_pdf
-from hackalem.media import prepare_audio
-from hackalem.processing import analyze_meeting, transcribe_meeting
+# Make package imports work when Streamlit runs this file by path.
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from app.core.config import SAMPLES_DIR
+from app.services.exporter import build_docx, build_pdf
+from app.services.media import prepare_audio
+from app.services.extractor import analyze_meeting, transcribe_meeting
 
 
 st.set_page_config(page_title="Хаттама — протокол совещания", page_icon="🎙️", layout="wide")
@@ -102,8 +109,8 @@ with right:
 consent = st.checkbox("Участники уведомлены о записи и расшифровке с помощью ИИ; при демонстрации реальные данные обезличены.")
 action_col, example_col = st.columns([1, 2])
 start_processing = action_col.button("Создать протокол", type="primary", disabled=not (upload and consent), width="content")
-EXAMPLE_RESULT = Path(__file__).parent / "samples" / "synthetic_meeting.result.json"
-if EXAMPLE_RESULT.is_file() and example_col.button("Открыть готовый пример (запись из samples/, обработана заранее)"):
+EXAMPLE_RESULT = SAMPLES_DIR / "synthetic_meeting.result.json"
+if EXAMPLE_RESULT.is_file() and example_col.button("Открыть готовый пример (запись из data/samples/, обработана заранее)"):
     import json
 
     example = json.loads(EXAMPLE_RESULT.read_text(encoding="utf-8"))
@@ -111,7 +118,7 @@ if EXAMPLE_RESULT.is_file() and example_col.button("Открыть готовы�
         "title": "Пример: синтетическое совещание (ru / kk / шала)",
         "analysis_mode": "ollama",
         "analysis_note": None,
-        "audio": (Path(__file__).parent / "samples" / "synthetic_meeting.mp3").read_bytes(),
+        "audio": (SAMPLES_DIR / "synthetic_meeting.mp3").read_bytes(),
         "audio_format": "audio/mpeg",
         **{key: example.get(key, default) for key, default in (
             ("date", "2026-09-23"), ("language", ""), ("duration", 0.0), ("transcript", []), ("summary", ""),

@@ -1,4 +1,4 @@
-"""Measure assignment extraction against the gold tables (samples/gold.json).
+"""Measure assignment extraction against the gold tables (data/samples/gold.json).
 
 Text examples from the task are turned into a diarization-like transcript: speaker
 names are hidden behind SPEAKER_XX labels, so the agent must recover who is who.
@@ -20,9 +20,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from hackalem.processing import analyze_meeting, transcribe_meeting  # noqa: E402
+from app.core.config import SAMPLES_DIR  # noqa: E402
+from app.services.extractor import analyze_meeting, transcribe_meeting  # noqa: E402
 
-SAMPLES = ROOT / "samples"
+SAMPLES = SAMPLES_DIR
 LINE = re.compile(r"^(?P<name>[^:(]+?)\s*(?:\((?P<role>[^)]*)\))?\s*:\s*(?P<text>.+)$")
 
 

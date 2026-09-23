@@ -13,9 +13,9 @@ from pathlib import Path
 
 import numpy as np
 
+from app.core.config import MODELS_DIR
 
-ROOT = Path(__file__).resolve().parents[1]
-SHERPA_DIR = Path(os.getenv("SHERPA_MODELS_DIR", ROOT / "models" / "sherpa"))
+SHERPA_DIR = Path(os.getenv("SHERPA_MODELS_DIR", MODELS_DIR / "sherpa"))
 SEGMENTATION_MODEL = SHERPA_DIR / "sherpa-onnx-pyannote-segmentation-3-0" / "model.onnx"
 EMBEDDING_MODEL = SHERPA_DIR / "3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx"
 

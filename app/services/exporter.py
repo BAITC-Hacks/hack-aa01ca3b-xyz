@@ -19,6 +19,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
+from app.core.config import FONTS_DIR
 
 def build_docx(
     title: str,
@@ -131,7 +132,6 @@ def build_pdf(
 
 
 ACTION_HEADINGS = ["Поручение", "Ответственный", "Голос", "Срок", "Статус", "Время"]
-FONTS_DIR = Path(__file__).resolve().parents[1] / "assets" / "fonts"
 
 
 def _action_row(action: dict[str, Any]) -> list[str]:

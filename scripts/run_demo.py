@@ -1,6 +1,6 @@
 """Process a meeting recording from the command line — the fastest way to check the main scenario.
 
-    python scripts/run_demo.py                                  # samples/synthetic_meeting.mp3
+    python scripts/run_demo.py                                  # data/samples/synthetic_meeting.mp3
     python scripts/run_demo.py path/to/meeting.m4a --date 2026-09-23 --speakers 4
 
 Writes out/<name>.json, out/<name>.docx and out/<name>.pdf and prints the assignments table.
@@ -19,14 +19,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from hackalem.export import build_docx, build_pdf  # noqa: E402
-from hackalem.media import prepare_audio  # noqa: E402
-from hackalem.processing import analyze_meeting, transcribe_meeting  # noqa: E402
+from app.core.config import SAMPLES_DIR  # noqa: E402
+from app.services.exporter import build_docx, build_pdf  # noqa: E402
+from app.services.media import prepare_audio  # noqa: E402
+from app.services.extractor import analyze_meeting, transcribe_meeting  # noqa: E402
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Локальное автопротоколирование совещания")
-    parser.add_argument("audio", nargs="?", default=str(ROOT / "samples" / "synthetic_meeting.mp3"))
+    parser.add_argument("audio", nargs="?", default=str(SAMPLES_DIR / "synthetic_meeting.mp3"))
     parser.add_argument("--date", default="2026-09-23", help="дата совещания YYYY-MM-DD (от неё считаются сроки)")
     parser.add_argument("--speakers", type=int, default=0, help="ожидаемое число участников, 0 — автоматически")
     parser.add_argument("--title", default="Протокол совещания")

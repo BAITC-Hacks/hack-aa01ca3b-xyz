@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Собирает синтетическую тестовую запись совещания (русский, казахский, шала) из реплик
-# samples/synthetic_meeting_script.txt голосами macOS: Milena (ru_RU) и Aru (kk_KZ).
+# data/samples/synthetic_meeting_script.txt голосами macOS: Milena (ru_RU) и Aru (kk_KZ).
 # Разные «участники» получаются сдвигом тона. Нужны macOS и ffmpeg.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-SCRIPT="samples/synthetic_meeting_script.txt"
-OUT="samples/synthetic_meeting.mp3"
+SCRIPT="data/samples/synthetic_meeting_script.txt"
+OUT="data/samples/synthetic_meeting.mp3"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
