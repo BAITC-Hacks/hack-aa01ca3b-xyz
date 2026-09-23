@@ -1,8 +1,10 @@
 .venv/
+.venv-mlx/
 __pycache__/
 *.py[cod]
 .env
 models/
+data/private_training/
 .streamlit/secrets.toml
 out/
 node_modules/

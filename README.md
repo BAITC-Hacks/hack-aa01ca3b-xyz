@@ -236,6 +236,36 @@ flowchart LR
 | `DIARIZATION_THRESHOLD` | `0.5` | Выше — меньше спикеров |
 | `WHISPER_MODEL` | `small` | Запасной faster-whisper, если модели kaz-rus не скачаны (скачивается при `DOWNLOAD_FALLBACK=1`) |
 
+## Экспериментальная LoRA-донастройка LLM
+
+Для эксперимента выбираем **Qwen3-4B-4bit** (`mlx-community/Qwen3-4B-4bit`) и LoRA через MLX-LM на Apple Silicon. Это отдельная модельная сборка для обучения; текущий backend пока продолжает вызывать `qwen3:4b` через Ollama. Веса и adapter остаются локально, в репозиторий они не добавляются.
+
+Вложения `Протокол_совещания№1/2.docx` содержат те же две размеченные встречи, что уже представлены в `data/samples/organizer_examples/meeting1.txt`, `meeting2.txt` и `data/samples/gold.json`: всего две обучающие встречи и 16 эталонных поручений. Этого достаточно для технического пробного запуска, но недостаточно, чтобы надёжно улучшить качество на новых совещаниях. Синтетическая запись оставлена только для smoke-test; она тематически пересекается с обучающими примерами и не является независимой проверкой качества. MP3 напрямую в LLM не подаются — LLM обучается на транскрипте, а звук относится к отдельному этапу ASR.
+
+На Mac с Apple Silicon подготовьте окружение и JSONL:
+
+```bash
+python3.12 -m venv .venv-mlx
+source .venv-mlx/bin/activate
+python -m pip install --upgrade pip
+python -m pip install 'mlx-lm[train]'
+python scripts/prepare_llm_training.py
+```
+
+Пробный QLoRA запуск для M1 Pro с 16 ГБ памяти:
+
+```bash
+mlx_lm.lora --model mlx-community/Qwen3-4B-4bit --train \
+  --data data/private_training/qwen3-4b-lora \
+  --adapter-path models/qwen3-meeting-lora \
+  --batch-size 1 --num-layers 4 --iters 20 \
+  --max-seq-length 4096 --grad-checkpoint --mask-prompt
+```
+
+Это короткий технический прогон, а не готовый production adapter. Для подтверждения улучшения понадобятся новые встречи с вручную проверенными транскриптами и поручениями, которые не использовались при обучении. См. [официальное руководство MLX-LM по LoRA/QLoRA](https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md) и [карточку выбранной модели](https://huggingface.co/mlx-community/Qwen3-4B-4bit).
+
+Результат пробного запуска на Mac M1 Pro: 20/20 итераций завершились, обучаемые параметры — 1,835 млн (0,046%), train loss — 0,459 на итерации 10 и 0,163 на итерации 20, пиковая память — 6,85 ГБ. Adapter сохранён в `models/qwen3-meeting-lora/` и исключён из Git; это локальный артефакт. Validation set не запускался, поэтому падение train loss само по себе не подтверждает качество на новых встречах. Backend ещё не переключён на этот adapter.
+
 ## Проверка основного сценария вручную
 
 1. Запустите веб-интерфейс, загрузите `data/samples/synthetic_meeting.mp3`, дату оставьте 23.09.2026, отметьте согласие и нажмите «Создать протокол».
